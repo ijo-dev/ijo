@@ -18,8 +18,8 @@
   ],
   "plugins": [],
   "dependencies": [
-    "gsap",
-    "@gsap/react"
+    "gsap@3.13.0",
+    "@gsap/react@2.1.2"
   ],
   "added": "2026-10-14"
 }
