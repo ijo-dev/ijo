@@ -36,7 +36,7 @@ children cross-fade over 0.2s. The finished layout is identical either way.
 ## Install
 
 ```bash
-npx shadcn@latest add https://ijo.dev/r/rise-in.json
+npx shadcn@latest add https://ijo-flame.vercel.app/r/rise-in.json
 ```
 
 ## Usage

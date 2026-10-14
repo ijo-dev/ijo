@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "ijo",
-  "homepage": "https://ijo.dev",
+  "homepage": "https://ijo-flame.vercel.app",
   "items": [
     {
       "name": "rise-in",

@@ -84,3 +84,25 @@ production is what we ship.
 production URL and then to `http://localhost:3100`. Nothing prints `https://ijo.dev`
 until that domain is registered and the environment variable is set, so the install
 command a visitor copies always points at a host that actually serves the registry.
+
+## 2026-10-14 — The domain is deferred; we stay on the Vercel URL for now
+
+`ijo.dev` is unregistered but sits in the registry's premium tier: $97.68 a year,
+and premium renewals stay premium — against $12.87 for a standard `.dev`. Every
+short `ijo.*` is priced the same way (`ijo.design` $109.69, `ijo.pro` $108.60).
+
+We are not paying that before the library has anything in it. The site stays on its
+Vercel production URL through Phase 2 and we decide again before launch, with
+Porkbun as the registrar when we do — it sells premium `.dev`, includes WHOIS
+privacy, and quoted these prices.
+
+Nothing is blocked by this. `next.config.ts` resolves the origin at build time and
+`packages/registry/scripts/build.mjs` does the same for `registry.json`, so adopting
+a domain later means registering it, adding it to the Vercel project, and setting
+`NEXT_PUBLIC_SITE_URL` — no code change. The two places that cannot be resolved at
+build time, because they are plain Markdown read on GitHub, are each component's
+`README.md` install line and this file.
+
+The cost of waiting is that any install command published in the meantime carries
+the Vercel host, so hold off on publicising the registry URL until the domain is
+settled.

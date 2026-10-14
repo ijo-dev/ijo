@@ -5,7 +5,7 @@
  *                             plus the gzipped size shown on each card.
  *   registry.json             a shadcn-compatible registry, which `shadcn build`
  *                             then turns into apps/web/public/r/<name>.json so
- *                             `npx shadcn add https://ijo.dev/r/<name>.json` works.
+ *                             `npx shadcn add <site>/r/<name>.json` works.
  *
  * Run it from the repo root with `pnpm registry`.
  */
@@ -18,7 +18,17 @@ const here = dirname(fileURLToPath(import.meta.url));
 const pkg = resolve(here, "..");
 const componentsDir = resolve(pkg, "src/components");
 
-export const SITE_URL = process.env.IJO_SITE_URL ?? "https://ijo.dev";
+/**
+ * The published origin, written into registry.json's homepage field. It is the
+ * live production host until ijo.dev is registered — see DECISIONS.md. Vercel
+ * sets VERCEL_PROJECT_PRODUCTION_URL during a deploy; IJO_SITE_URL overrides
+ * both once a real domain exists.
+ */
+export const SITE_URL =
+  process.env.IJO_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "https://ijo-flame.vercel.app");
 
 /** Fails the build rather than shipping a half-filled card. */
 const required = ["name", "title", "export", "category", "description", "behaviour", "added"];
