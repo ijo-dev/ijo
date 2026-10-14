@@ -1,0 +1,68 @@
+export const metadata = {
+  title: "Getting started",
+  description: "Install an Ijó component in Next.js, Vite, Nuxt or a plain HTML page.",
+};
+
+# Getting started
+
+Every component is plain source you own. There is no runtime package to keep up to
+date and nothing to pay for.
+
+## Install GSAP
+
+GSAP has been free for commercial use since April 2025, including the plugins the
+library leans on.
+
+```bash
+npm install gsap @gsap/react
+```
+
+`@gsap/react` is only needed for React. Vue and plain HTML use `gsap` on its own.
+
+## Add a component
+
+The library is a shadcn-compatible registry, so the CLI can drop a component
+straight into your project:
+
+```bash
+npx shadcn@latest add https://ijo.dev/r/rise-in.json
+```
+
+It lands in `components/ijo/`, as a file you can edit. If you would rather not run
+the CLI, open the component's page and copy the source out of the code block.
+
+## Next.js App Router
+
+Components that animate are client components — they carry `"use client"` already.
+Import them anywhere:
+
+```tsx
+import { RiseIn, RiseInItem } from "@/components/ijo/rise-in";
+
+export default function Page() {
+  return (
+    <RiseIn>
+      <RiseInItem>
+        <h1>Ìjẹ̀bú dark roast</h1>
+      </RiseInItem>
+    </RiseIn>
+  );
+}
+```
+
+Nothing runs on the server: every animation is created inside `useGSAP`, which only
+fires in the browser.
+
+## Vite
+
+The same import works. Make sure `gsap` is not externalised in your build config.
+
+## Nuxt
+
+Use the `.vue` variant from the component's code tab. Animations are created in
+`onMounted` inside a `gsap.context()` and reverted in `onUnmounted`.
+
+## Plain HTML
+
+The HTML tab gives you a self-contained snippet with a module script. It loads GSAP
+from a CDN; for production, serve it from your own origin instead.

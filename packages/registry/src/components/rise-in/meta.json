@@ -1,0 +1,25 @@
+{
+  "name": "rise-in",
+  "title": "Rise In",
+  "export": "RiseIn",
+  "category": "Text",
+  "description": "Lifts a stack of elements into place, one after another, as the page settles.",
+  "behaviour": "Each direct child wrapped in RiseInItem starts a set distance below its resting place at zero opacity and travels up to it. Children are offset from each other by the stagger, so the group reads as one gesture rather than six separate arrivals. Animations are created inside useGSAP with the wrapper as scope, so React StrictMode's double mount and any unmount revert cleanly, and nothing runs on the server. With no children to animate the component renders its wrapper and does nothing. Under prefers-reduced-motion: reduce the travel and the stagger both drop to zero and the children cross-fade over 0.2s, which keeps the layout identical to the finished state.",
+  "demoChildren": [
+    "<h3>Ìjẹ̀bú dark roast</h3>",
+    "<p>Cocoa and burnt sugar, roasted in Yaba.</p>",
+    "<p>₦7,200 a 250g bag</p>"
+  ],
+  "tags": [
+    "reveal",
+    "stagger",
+    "entrance",
+    "text"
+  ],
+  "plugins": [],
+  "dependencies": [
+    "gsap",
+    "@gsap/react"
+  ],
+  "added": "2026-10-14"
+}

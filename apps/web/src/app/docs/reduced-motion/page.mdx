@@ -1,0 +1,54 @@
+export const metadata = {
+  title: "Reduced motion",
+  description: "How Ijó components behave when the reader has asked for less motion.",
+};
+
+# Reduced motion
+
+Some people get motion sick from travel and parallax; some just want a page to sit
+still. Both say so with a system setting, which reaches the browser as
+`prefers-reduced-motion: reduce`.
+
+## What we do
+
+Every component in the library ships a reduced variant. The rule is the same
+everywhere:
+
+- Travel, parallax and rotation drop to zero.
+- Stagger drops to zero, so a group arrives together.
+- What is left is a cross-fade of about 0.2s, or nothing at all.
+- The finished layout is **identical** to the full-motion one. A reduced variant
+  never leaves an element off-screen, half-faded or stacked wrongly.
+
+## How it is written
+
+GSAP's `matchMedia` reverts everything it created when a query stops matching, so
+the two variants cannot leak into each other:
+
+```js
+gsap.matchMedia().add(
+  {
+    motion: "(prefers-reduced-motion: no-preference)",
+    reduced: "(prefers-reduced-motion: reduce)",
+  },
+  (context) => {
+    const reduced = context.conditions.reduced;
+    gsap.from(items, {
+      y: reduced ? 0 : 24,
+      opacity: 0,
+      duration: reduced ? 0.2 : 0.9,
+      stagger: reduced ? 0 : 0.06,
+    });
+  },
+  scope
+);
+```
+
+## Checking your work
+
+In Chrome DevTools, open the command menu and run "Emulate CSS
+prefers-reduced-motion". On macOS the real setting is System Settings → Accessibility
+→ Display → Reduce motion.
+
+Our Playwright suite runs the same check on every component: with reduced motion on,
+the content must still end up visible.

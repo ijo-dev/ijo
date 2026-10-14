@@ -1,0 +1,183 @@
+@import "tailwindcss";
+@import "@ijo/tokens/tokens.css";
+@import "@ijo/tokens/theme.css";
+
+/* The registry's components are compiled with the app, so Tailwind must see them. */
+@source "../../../../packages/registry/src";
+
+@theme {
+  /* next/font supplies the real families; the token stacks stay as fallbacks. */
+  --font-sans: var(--font-schibsted), "Schibsted Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    /* App UI runs at 14px per the design system; docs prose opts up to 16px. */
+    font-size: 14px;
+    line-height: 21px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--grape-6);
+    color: var(--text);
+  }
+
+  /* One focus treatment everywhere, 8:1 or better on every surface. */
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Docs prose: the one place we move up to 16px. */
+@utility prose-docs {
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--text-muted);
+  max-width: 70ch;
+
+  & h2 {
+    color: var(--text);
+    font-size: 28px;
+    line-height: 34px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: var(--space-7) 0 var(--space-3);
+  }
+  & h3 {
+    color: var(--text);
+    font-size: 20px;
+    line-height: 28px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: var(--space-6) 0 var(--space-2);
+  }
+  & p,
+  & ul,
+  & ol {
+    margin: 0 0 var(--space-4);
+  }
+  & ul,
+  & ol {
+    padding-left: var(--space-5);
+  }
+  & li {
+    margin-bottom: var(--space-2);
+  }
+  & a {
+    color: var(--primary-text);
+    text-underline-offset: 3px;
+  }
+  & strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+  & code {
+    font-family: var(--font-mono);
+    font-size: 0.92em;
+    font-weight: 500;
+    background: var(--surface-3);
+    border-radius: var(--radius-xs);
+    padding: 2px 5px;
+  }
+  & pre {
+    background: var(--surface-2) !important;
+    box-shadow: var(--shadow-ring-hairline);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    overflow-x: auto;
+    margin: 0 0 var(--space-5);
+    font-size: 13px;
+    line-height: 20px;
+  }
+  & pre code {
+    background: none;
+    padding: 0;
+    font-size: inherit;
+  }
+  & table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 var(--space-5);
+    font-size: 14px;
+  }
+  & th {
+    text-align: left;
+    color: var(--text);
+    font-weight: 600;
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  & td {
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px solid var(--border-subtle);
+    vertical-align: top;
+  }
+}
+
+/* The customize slider. Range inputs cannot be styled with utilities alone,
+   so this is the one place the reference stylesheet is transcribed verbatim. */
+.ij-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 20px;
+  background: transparent;
+  margin: 0;
+  cursor: pointer;
+  --pct: 50%;
+}
+.ij-range::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(to right, var(--primary) var(--pct), var(--border-strong) var(--pct));
+}
+.ij-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: -6px;
+  border-radius: var(--radius-full);
+  background: var(--text);
+  border: 3px solid var(--primary);
+}
+.ij-range::-moz-range-track {
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: var(--border-strong);
+}
+.ij-range::-moz-range-progress {
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: var(--primary);
+}
+.ij-range::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-full);
+  background: var(--text);
+  border: 3px solid var(--primary);
+}

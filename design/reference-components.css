@@ -1,0 +1,72 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;600&display=swap");
+
+/* Ijó components — plain CSS, every value from tokens.css */
+body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+.ij-stage { padding: var(--space-4); display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
+.ij-col { display: flex; flex-direction: column; gap: var(--space-3); }
+:where(.ij-btn, .ij-input, .ij-tab, .ij-range, .ij-card, .ij-copy):focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+
+/* Button */
+.ij-btn { display: inline-flex; align-items: center; gap: var(--space-2); height: 36px; padding: 0 var(--space-4); border-radius: var(--radius-md); border: 1px solid transparent; font: 500 14px/20px var(--font-sans); cursor: pointer; transition: background-color var(--duration-instant) var(--ease-out), border-color var(--duration-instant) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out); }
+.ij-btn--primary { background: var(--primary); color: var(--on-primary); }
+.ij-btn--primary:hover { background: var(--primary-hover); box-shadow: var(--shadow-glow); }
+.ij-btn--secondary { background: var(--surface-3); color: var(--text); box-shadow: var(--ring-button); }
+.ij-btn--secondary:hover { background: var(--surface-4); }
+.ij-btn--ghost { background: transparent; color: var(--text-muted); }
+.ij-btn--ghost:hover { background: var(--surface-3); color: var(--text); }
+.ij-btn--sm { height: 32px; padding: 0 var(--space-3); font-size: 13px; }
+.ij-btn[disabled] { opacity: .4; pointer-events: none; }
+
+/* Badge */
+.ij-badge { display: inline-flex; align-items: center; gap: var(--space-1); padding: 2px var(--space-2); border-radius: var(--radius-sm); font: 500 12px/16px var(--font-sans); letter-spacing: .02em; background: var(--surface-3); color: var(--text-muted); border: 1px solid var(--border-subtle); }
+.ij-badge--brand { background: var(--grape-3); color: var(--grape-11); border-color: var(--grape-7); }
+.ij-badge--new { background: var(--ember); color: var(--on-signal); border-color: transparent; }
+.ij-badge--success { background: var(--success); color: var(--on-signal); border-color: transparent; }
+.ij-badge--danger { background: var(--danger); color: var(--on-signal); border-color: transparent; }
+
+/* Input */
+.ij-field { display: flex; flex-direction: column; gap: var(--space-2); max-width: 320px; }
+.ij-label { font: 500 13px/16px var(--font-sans); color: var(--text-muted); }
+.ij-input { height: 36px; padding: 0 var(--space-3); border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--surface-3); color: var(--text); font: 400 14px/20px var(--font-sans); }
+.ij-input::placeholder { color: var(--text-faint); }
+.ij-input:hover { border-color: var(--border-strong); }
+.ij-input[aria-invalid="true"] { border-color: var(--danger); }
+.ij-hint { font: 400 12px/16px var(--font-sans); color: var(--text-faint); }
+.ij-hint--error { color: var(--danger); }
+
+/* ComponentCard */
+.ij-card { display: block; width: 280px; text-decoration: none; color: inherit; background: var(--surface-2); box-shadow: var(--ring-hairline); border-radius: var(--radius-lg); overflow: hidden; transition: background-color var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out); }
+.ij-card:hover { background: var(--surface-3); box-shadow: var(--shadow-raised); transform: translateY(-2px); }
+.ij-card__media { aspect-ratio: 16 / 10; background: var(--grape-1); position: relative; overflow: hidden; }
+.ij-card__body { padding: var(--space-3) var(--space-4) var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); }
+.ij-card__title { font: 600 16px/24px var(--font-sans); letter-spacing: -.01em; margin: 0; color: var(--text); }
+.ij-card__meta { display: flex; gap: var(--space-2); align-items: center; font: 500 12px/16px var(--font-sans); color: var(--text-faint); }
+@media (prefers-reduced-motion: reduce) { .ij-card, .ij-card:hover { transform: none; } }
+
+/* CodeBlock */
+.ij-code { background: var(--surface-2); box-shadow: var(--ring-hairline); border-radius: var(--radius-lg); overflow: hidden; max-width: 560px; }
+.ij-code__bar { display: flex; align-items: center; gap: var(--space-1); padding: var(--space-2); border-bottom: 1px solid var(--border-subtle); }
+.ij-tab { background: transparent; border: 0; border-radius: var(--radius-sm); padding: 6px var(--space-3); font: 500 13px/16px var(--font-sans); color: var(--text-muted); cursor: pointer; }
+.ij-tab:hover { color: var(--text); background: var(--surface-3); }
+.ij-tab[aria-selected="true"] { color: var(--text); background: var(--surface-5); }
+.ij-copy { margin-left: auto; }
+.ij-code pre { margin: 0; padding: var(--space-4); overflow-x: auto; font: 400 13px/20px var(--font-mono); color: var(--text); }
+.ij-tok-k { color: var(--grape-11); } .ij-tok-s { color: var(--success); } .ij-tok-n { color: var(--ember); } .ij-tok-c { color: var(--text-faint); }
+
+/* ControlSlider */
+.ij-panel { background: var(--surface-2); box-shadow: var(--ring-hairline); border-radius: var(--radius-lg); padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-4); width: 300px; }
+.ij-ctl { display: flex; flex-direction: column; gap: var(--space-2); }
+.ij-ctl__head { display: flex; justify-content: space-between; align-items: baseline; }
+.ij-ctl__val { font: 500 13px/16px var(--font-mono); font-variant-numeric: tabular-nums; color: var(--grape-11); }
+.ij-range { -webkit-appearance: none; appearance: none; width: 100%; height: 20px; background: transparent; margin: 0; cursor: pointer; --pct: 50%; }
+.ij-range::-webkit-slider-runnable-track { height: 4px; border-radius: var(--radius-full); background: linear-gradient(to right, var(--primary) var(--pct), var(--border-strong) var(--pct)); }
+.ij-range::-moz-range-track { height: 4px; border-radius: var(--radius-full); background: var(--border-strong); }
+.ij-range::-moz-range-progress { height: 4px; border-radius: var(--radius-full); background: var(--primary); }
+.ij-range::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; margin-top: -6px; border-radius: var(--radius-full); background: var(--text); border: 3px solid var(--primary); }
+.ij-range::-moz-range-thumb { width: 12px; height: 12px; border-radius: var(--radius-full); background: var(--text); border: 3px solid var(--primary); }
+
+/* Section header (Beautiful UI pattern): number, title, one-line description on one baseline */
+.ij-section-head { display: flex; align-items: baseline; gap: var(--space-2); font: 400 14px/21px var(--font-sans); margin: 0 0 var(--space-3); }
+.ij-section-head__num { font: 500 12px/16px var(--font-mono); color: var(--text-faint); }
+.ij-section-head__title { font-weight: 600; color: var(--text); }
+.ij-section-head__desc { color: var(--text-faint); }

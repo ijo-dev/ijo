@@ -1,0 +1,44 @@
+<!--
+  Rise In — lifts a stack of elements into place, one after another.
+  Wrap each element you want to animate in [data-slot="rise-in-item"].
+  Under prefers-reduced-motion: reduce the children cross-fade with no travel.
+-->
+<div data-slot="rise-in" id="rise-in">
+  <div data-slot="rise-in-item">Ìjẹ̀bú dark roast</div>
+  <div data-slot="rise-in-item">₦7,200 a bag</div>
+  <div data-slot="rise-in-item">Roasted in Yaba, Tuesdays</div>
+</div>
+
+<script type="module">
+  import gsap from "https://cdn.jsdelivr.net/npm/gsap@3.13.0/index.js";
+
+  const scope = document.querySelector("#rise-in");
+  const options = { duration: 0.9, distance: 24, stagger: 0.06, ease: "expo.out", delay: 0, staggered: true };
+
+  const ctx = gsap.context(() => {
+    const items = gsap.utils.toArray("[data-slot='rise-in-item']");
+    if (items.length === 0) return;
+
+    gsap.matchMedia().add(
+      {
+        motion: "(prefers-reduced-motion: no-preference)",
+        reduced: "(prefers-reduced-motion: reduce)",
+      },
+      (context) => {
+        const reduced = context.conditions.reduced;
+        gsap.from(items, {
+          y: reduced ? 0 : options.distance,
+          opacity: 0,
+          duration: reduced ? 0.2 : options.duration,
+          delay: options.delay,
+          ease: reduced ? "none" : options.ease,
+          stagger: reduced || !options.staggered ? 0 : options.stagger,
+          clearProps: "transform,opacity",
+        });
+      },
+      scope
+    );
+  }, scope);
+
+  // Call ctx.revert() if you tear the section down (e.g. in a single-page app).
+</script>

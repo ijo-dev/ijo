@@ -1,0 +1,27 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "ijo",
+  "homepage": "https://ijo.dev",
+  "items": [
+    {
+      "name": "rise-in",
+      "type": "registry:component",
+      "title": "Rise In",
+      "description": "Lifts a stack of elements into place, one after another, as the page settles.",
+      "categories": [
+        "text"
+      ],
+      "dependencies": [
+        "gsap",
+        "@gsap/react"
+      ],
+      "files": [
+        {
+          "path": "src/components/rise-in/component.tsx",
+          "type": "registry:component",
+          "target": "components/ijo/rise-in.tsx"
+        }
+      ]
+    }
+  ]
+}

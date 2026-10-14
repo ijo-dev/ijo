@@ -1,0 +1,16 @@
+node_modules/
+.next/
+out/
+dist/
+.turbo/
+coverage/
+test-results/
+playwright-report/
+.DS_Store
+*.log
+.env
+.env.local
+.vercel
+apps/web/public/r/
+packages/tokens/dist/
+.claude/launch.json
