@@ -77,3 +77,10 @@ plays off-screen either way.
 Playwright builds the site and starts it on 3101 rather than reusing a dev server.
 The dev client's HMR socket makes hydration unreliable under automation, and
 production is what we ship.
+
+## 2026-10-14 — The public origin is resolved from the deploy, not hardcoded
+
+`next.config.ts` resolves `NEXT_PUBLIC_SITE_URL`, falling back to Vercel's own
+production URL and then to `http://localhost:3100`. Nothing prints `https://ijo.dev`
+until that domain is registered and the environment variable is set, so the install
+command a visitor copies always points at a host that actually serves the registry.
