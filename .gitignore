@@ -14,3 +14,4 @@ playwright-report/
 apps/web/public/r/
 packages/tokens/dist/
 .claude/launch.json
+apps/web/tsconfig.tsbuildinfo
