@@ -39,7 +39,7 @@ export function ComponentCard({ meta }: { meta: Meta }) {
           }
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.5 },
     );
     observer.observe(node);
     return () => observer.disconnect();
@@ -59,8 +59,10 @@ export function ComponentCard({ meta }: { meta: Meta }) {
       className="group block overflow-hidden rounded-lg bg-surface-2 shadow-ring-hairline transition-[background-color,transform,box-shadow] duration-[280ms] ease-out hover:-translate-y-0.5 hover:bg-surface-3 hover:shadow-raised motion-reduce:hover:translate-y-0"
     >
       <div className="relative flex aspect-[16/10] items-center justify-center overflow-hidden bg-grape-1 p-5">
-        <div className="pointer-events-none w-full scale-[0.72] origin-center">
-          {Demo ? <Demo key={playing ? play : "poster"} duration={playing ? undefined : 0} /> : null}
+        <div className="demo-frame pointer-events-none w-full scale-[0.72] origin-center">
+          {Demo ? (
+            <Demo key={playing ? play : "poster"} duration={playing ? undefined : 0} />
+          ) : null}
         </div>
       </div>
 

@@ -16,7 +16,7 @@ const buttonVariants: Record<ButtonVariant, string> = {
   ghost: "bg-transparent text-text-muted hover:bg-surface-3 hover:text-text",
 };
 
-const buttonSizes = { md: "h-9 px-4 text-[14px]", sm: "h-8 px-3 text-[13px]" };
+const buttonSizes = { md: "h-9 px-4 text-[13px]", sm: "h-8 px-3 text-[12px]" };
 
 export function Button({
   variant = "secondary",
@@ -68,7 +68,7 @@ export function Badge({
       className={clsx(
         "inline-flex items-center gap-1 rounded-sm border px-2 py-[2px] text-caption",
         badgeTones[tone],
-        className
+        className,
       )}
     >
       {children}

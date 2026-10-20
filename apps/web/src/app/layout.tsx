@@ -13,9 +13,10 @@ const sans = Schibsted_Grotesk({
   variable: "--font-schibsted",
 });
 
+/* The site is set in JetBrains Mono; the demos keep Schibsted Grotesk. */
 const mono = JetBrains_Mono({
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400", "500", "600"],
   display: "swap",
   variable: "--font-jetbrains",
 });

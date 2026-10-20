@@ -20,10 +20,13 @@
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: var(--font-sans);
-    /* App UI runs at 14px per the design system; docs prose opts up to 16px. */
-    font-size: 14px;
-    line-height: 21px;
+    /* The site is set in JetBrains Mono at 13px; docs prose opts up to 15px. Demos
+       switch back to the sans family inside their stage (see .demo-frame). */
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 20px;
+    /* No coding ligatures in interface text: "->" should read as two characters. */
+    font-variant-ligatures: none;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -54,23 +57,23 @@
 
 /* Docs prose: the one place we move up to 16px. */
 @utility prose-docs {
-  font-size: 16px;
+  font-size: 15px;
   line-height: 24px;
   color: var(--text-muted);
   max-width: 70ch;
 
   & h2 {
     color: var(--text);
-    font-size: 28px;
-    line-height: 34px;
+    font-size: 24px;
+    line-height: 30px;
     font-weight: 600;
     letter-spacing: -0.02em;
     margin: var(--space-7) 0 var(--space-3);
   }
   & h3 {
     color: var(--text);
-    font-size: 20px;
-    line-height: 28px;
+    font-size: 17px;
+    line-height: 24px;
     font-weight: 600;
     letter-spacing: -0.01em;
     margin: var(--space-6) 0 var(--space-2);
@@ -180,4 +183,48 @@
   border-radius: var(--radius-full);
   background: var(--text);
   border: 3px solid var(--primary);
+}
+
+/* Inside a demo: the fictional brand's own type, as the demo was designed. */
+@utility demo-frame {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 21px;
+  font-variant-ligatures: normal;
+}
+
+/* A recessed field: search boxes and the search trigger. */
+@utility inset-field {
+  background: var(--surface-2);
+  box-shadow:
+    var(--ring-hairline),
+    inset 0 1px 2px rgb(0 0 0 / 0.35);
+  border-radius: var(--radius-md);
+}
+
+/* A keyboard hint, e.g. ⌘K or Esc. */
+@utility kbd {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: var(--radius-xs);
+  background: var(--bg);
+  box-shadow: var(--ring-hairline);
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 16px;
+}
+
+@keyframes palette-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.985);
+  }
+}
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
 }

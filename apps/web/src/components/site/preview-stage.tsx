@@ -67,7 +67,7 @@ export function PreviewStage({
       {/* Full width, so a demo sized "w-full max-w-…" fills the stage and never pushes
           it wider than the screen on a phone. */}
       {visible ? (
-        <div key={replayKey} className="flex w-full min-w-0 justify-center">
+        <div key={replayKey} className="demo-frame flex w-full min-w-0 justify-center">
           {children}
         </div>
       ) : null}

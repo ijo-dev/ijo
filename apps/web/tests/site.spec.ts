@@ -8,7 +8,7 @@ test("home page leads with the hero and the library", async ({ page }) => {
 
 test("library search narrows the grid and says so when nothing matches", async ({ page }) => {
   await page.goto("/library");
-  const search = page.getByLabel("Search components");
+  const search = page.getByLabel("Filter components");
 
   await search.fill("rise");
   await expect(page.getByRole("heading", { name: "Rise In" })).toBeVisible();
@@ -69,4 +69,32 @@ test("no component page is wider than the screen", async ({ page }) => {
     );
     expect(overflow, `${href} scrolls sideways by ${overflow}px`).toBeLessThanOrEqual(0);
   }
+});
+
+test("⌘K opens search, filters the library and opens a result", async ({ page }) => {
+  await page.goto("/");
+  await page.keyboard.press("ControlOrMeta+k");
+
+  const dialog = page.getByRole("dialog", { name: "Search components" });
+  await expect(dialog).toBeVisible();
+  await expect(page.getByRole("combobox", { name: "Search components" })).toBeFocused();
+
+  await page.keyboard.type("card stack");
+  await expect(dialog.getByText("1 matching component")).toBeVisible();
+  await page.keyboard.press("Enter");
+
+  await expect(page).toHaveURL(/\/library\/card-stack$/);
+  await expect(dialog).toBeHidden();
+});
+
+test("the search button opens search and Escape closes it", async ({ page }) => {
+  await page.goto("/library");
+  const button = page.getByRole("button", { name: "Search components" });
+  await button.click();
+
+  const dialog = page.getByRole("dialog", { name: "Search components" });
+  await expect(dialog).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+  await expect(button).toBeFocused();
 });
