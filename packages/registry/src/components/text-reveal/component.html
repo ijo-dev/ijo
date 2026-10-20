@@ -1,0 +1,47 @@
+<!--
+  Text Reveal — slides text up from behind a mask, one line, word or letter at a time.
+  Under prefers-reduced-motion: reduce the text fades in where it stands.
+-->
+<h2 data-slot="text-reveal" id="text-reveal">
+  Roasted in Yaba on Tuesday, in your cup by Thursday.
+</h2>
+
+<script type="module">
+  import gsap from "https://cdn.jsdelivr.net/npm/gsap@3.13.0/index.js";
+  import { SplitText } from "https://cdn.jsdelivr.net/npm/gsap@3.13.0/SplitText.js";
+
+  gsap.registerPlugin(SplitText);
+
+  const el = document.querySelector("#text-reveal");
+  const options = { split: "lines", duration: 0.8, stagger: 0.08, ease: "expo.out", delay: 0 };
+
+  const ctx = gsap.context(() => {
+    gsap.matchMedia().add(
+      {
+        motion: "(prefers-reduced-motion: no-preference)",
+        reduced: "(prefers-reduced-motion: reduce)",
+      },
+      (context) => {
+        if (context.conditions.reduced) {
+          gsap.from(el, { opacity: 0, duration: 0.2, delay: options.delay, clearProps: "opacity" });
+          return;
+        }
+        SplitText.create(el, {
+          type: options.split === "chars" ? "words,chars" : options.split,
+          mask: options.split,
+          autoSplit: options.split === "lines",
+          onSplit: (self) =>
+            gsap.from(self[options.split], {
+              yPercent: 110,
+              duration: options.duration,
+              ease: options.ease,
+              delay: options.delay,
+              stagger: options.stagger,
+            }),
+        });
+      }
+    );
+  }, el);
+
+  // Call ctx.revert() if you tear the section down (e.g. in a single-page app).
+</script>

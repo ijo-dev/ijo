@@ -1,0 +1,68 @@
+<!--
+  Accordion — sections that open and close smoothly, built on the native <details> element.
+  Works without JavaScript; the script only animates the height.
+  Under prefers-reduced-motion: reduce sections toggle instantly.
+-->
+<div data-slot="accordion" id="accordion">
+  <details data-slot="accordion-item" open>
+    <summary>Do you deliver outside Lagos?</summary>
+    <p>Yes, to every state, in 2–4 working days.</p>
+  </details>
+  <details data-slot="accordion-item">
+    <summary>Can I get it ground?</summary>
+    <p>Choose whole bean, or a grind for V60, French press or moka pot.</p>
+  </details>
+</div>
+
+<script type="module">
+  import gsap from "https://cdn.jsdelivr.net/npm/gsap@3.13.0/index.js";
+
+  const root = document.querySelector("#accordion");
+  const options = { duration: 0.45, ease: "power3.inOut", single: false };
+  const items = [...root.querySelectorAll("[data-slot='accordion-item']")];
+  items.forEach((item) => (item.dataset.state = item.open ? "open" : "closed"));
+
+  const heightWhen = (item, open) => {
+    const [wasOpen, inline] = [item.open, item.style.height];
+    item.style.height = "";
+    item.open = open;
+    const height = item.offsetHeight;
+    item.open = wasOpen;
+    item.style.height = inline;
+    return height;
+  };
+
+  const toggle = (item, open) => {
+    item.dataset.state = open ? "open" : "closed";
+    gsap.killTweensOf(item);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      item.open = open;
+      return;
+    }
+    const from = item.offsetHeight;
+    const to = heightWhen(item, open);
+    item.open = true;
+    gsap.fromTo(
+      item,
+      { height: from, overflow: "hidden" },
+      {
+        height: to,
+        duration: options.duration,
+        ease: options.ease,
+        onComplete: () => {
+          item.open = open;
+          gsap.set(item, { clearProps: "height,overflow" });
+        },
+      }
+    );
+  };
+
+  root.addEventListener("click", (event) => {
+    const item = event.target.closest("summary")?.parentElement;
+    if (!items.includes(item)) return;
+    event.preventDefault();
+    const open = item.dataset.state !== "open";
+    if (open && options.single) items.forEach((other) => other !== item && other.dataset.state === "open" && toggle(other, false));
+    toggle(item, open);
+  });
+</script>

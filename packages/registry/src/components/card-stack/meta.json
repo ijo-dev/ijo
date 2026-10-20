@@ -1,0 +1,17 @@
+{
+  "name": "card-stack",
+  "title": "Card Stack",
+  "export": "CardStack",
+  "category": "UI",
+  "description": "A pile of cards: the top one lifts away and slides to the back, and the rest move up.",
+  "behaviour": "The CardStackItem children are stacked in one grid cell, each card below sitting offset pixels lower, slightly smaller, and tilted by rotation degrees to alternating sides; cards past the third fade out so the pile stays tidy. Clicking the top card (anywhere but a link or button on it) or pressing the next button lifts the top card away, drops it to the back, and moves every other card up one place, staggered so the pile settles naturally. A click while a move is in progress is ignored, so the order can never scramble. Only the top card is exposed: the rest are inert and hidden from screen readers, and a status message announces which card is now on top. Under prefers-reduced-motion: reduce the top card fades out and the next fades in with no travel.",
+  "demoChildren": [
+    "<h3>Ìjẹ̀bú dark roast</h3><p>₦7,200</p>",
+    "<h3>Ọ̀yọ́ medium roast</h3><p>₦6,800</p>",
+    "<h3>Èkó espresso blend</h3><p>₦7,500</p>"
+  ],
+  "tags": ["cards", "stack", "carousel", "deck", "gallery"],
+  "plugins": [],
+  "dependencies": ["gsap@3.13.0", "@gsap/react@2.1.2"],
+  "added": "2026-10-20"
+}

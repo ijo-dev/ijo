@@ -1,0 +1,14 @@
+{
+  "name": "text-reveal",
+  "title": "Text Reveal",
+  "export": "TextReveal",
+  "item": null,
+  "category": "Text",
+  "description": "Slides a heading or paragraph up from behind a mask, one line, word or letter at a time.",
+  "behaviour": "SplitText breaks the text into lines, words or letters and wraps each in a clipping mask, then each unit rises from just below its mask into place, offset from the one before by the stagger. When splitting by lines the text is re-split whenever fonts finish loading or the box changes width, so a line never breaks in the wrong place on a phone. Inline markup such as <em> survives the split, and screen readers hear the original sentence rather than the fragments. The split is undone when the component unmounts or a prop changes, leaving your markup exactly as authored. Under prefers-reduced-motion: reduce nothing is split and the whole block fades in over 0.2s.",
+  "demoChildren": ["Roasted in Yaba on Tuesday, in your cup by Thursday."],
+  "tags": ["text", "headline", "split", "mask", "reveal"],
+  "plugins": ["SplitText"],
+  "dependencies": ["gsap@3.13.0", "@gsap/react@2.1.2"],
+  "added": "2026-10-20"
+}

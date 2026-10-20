@@ -1,0 +1,13 @@
+{
+  "name": "marquee",
+  "title": "Marquee",
+  "export": "Marquee",
+  "category": "Sections",
+  "description": "An endless strip of logos, words or cards that slides past at a steady pace.",
+  "behaviour": "The strip renders your MarqueeItem children twice, side by side, and slides the pair by exactly one copy's width over duration, then repeats, so the join is invisible. gap spaces the items and the seam alike. The second copy is hidden from screen readers and from keyboard focus, so everything is announced and tabbable once. With pauseOnHover on, the strip eases to a stop while the pointer is over it or focus is inside it and eases back up afterwards. It also pauses itself while it is scrolled out of view, so it costs nothing off screen. If the items are narrower than the strip, repeat them until they overflow, or you will see the loop restart. Under prefers-reduced-motion: reduce the strip stays still.",
+  "demoChildren": ["Yaba", "Ikeja", "Lekki", "Surulere", "Abẹ́òkúta", "Ìbàdàn"],
+  "tags": ["marquee", "ticker", "logos", "loop", "banner"],
+  "plugins": [],
+  "dependencies": ["gsap@3.13.0", "@gsap/react@2.1.2"],
+  "added": "2026-10-20"
+}

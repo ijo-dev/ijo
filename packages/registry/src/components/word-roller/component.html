@@ -1,0 +1,58 @@
+<!--
+  Word Roller — rolls one word in a sentence through a list of alternatives.
+  Under prefers-reduced-motion: reduce the words cross-fade in place.
+-->
+<style>
+  [data-slot="word-roller"] { display: inline-grid; overflow: clip; vertical-align: bottom; }
+  [data-slot="word-roller-item"] { grid-area: 1 / 1; white-space: nowrap; }
+</style>
+
+<h2>
+  Coffee for
+  <span data-slot="word-roller" id="word-roller">
+    <span data-slot="word-roller-item">slow mornings</span>
+    <span data-slot="word-roller-item">long deadlines</span>
+    <span data-slot="word-roller-item">Sunday visitors</span>
+  </span>
+</h2>
+
+<script type="module">
+  import gsap from "https://cdn.jsdelivr.net/npm/gsap@3.13.0/index.js";
+
+  const scope = document.querySelector("#word-roller");
+  const options = { duration: 0.6, hold: 1.6, ease: "power3.inOut", direction: "up" };
+
+  const ctx = gsap.context(() => {
+    const items = gsap.utils.toArray("[data-slot='word-roller-item']");
+    if (items.length < 2) return;
+    items.slice(1).forEach((item) => item.setAttribute("aria-hidden", "true"));
+    const from = options.direction === "up" ? 100 : -100;
+
+    gsap.matchMedia().add(
+      {
+        motion: "(prefers-reduced-motion: no-preference)",
+        reduced: "(prefers-reduced-motion: reduce)",
+      },
+      (context) => {
+        const reduced = context.conditions.reduced;
+        gsap.set(items, reduced ? { autoAlpha: 0 } : { yPercent: from });
+        gsap.set(items[0], reduced ? { autoAlpha: 1 } : { yPercent: 0 });
+
+        const tl = gsap.timeline({ repeat: -1 });
+        items.forEach((item, i) => {
+          const next = items[(i + 1) % items.length];
+          if (reduced) {
+            tl.to(item, { autoAlpha: 0, duration: 0.2 }, `+=${options.hold}`).to(next, { autoAlpha: 1, duration: 0.2 }, "<");
+          } else {
+            tl.to(item, { yPercent: -from, duration: options.duration, ease: options.ease }, `+=${options.hold}`).fromTo(
+              next,
+              { yPercent: from },
+              { yPercent: 0, duration: options.duration, ease: options.ease },
+              "<"
+            );
+          }
+        });
+      }
+    );
+  }, scope);
+</script>

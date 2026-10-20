@@ -1,0 +1,13 @@
+{
+  "name": "word-roller",
+  "title": "Word Roller",
+  "export": "WordRoller",
+  "category": "Text",
+  "description": "Rolls one word in a sentence through a list of alternatives, like a split-flap sign.",
+  "behaviour": "Wrap each alternative in WordRollerItem. All of them sit in the same grid cell, so the slot is as wide as the longest word and the sentence around it never shifts. The first word shows straight away; after the hold time it rolls out as the next rolls in, and the list loops for as long as the component is mounted. Only the visible first word is exposed to screen readers, so the sentence reads once rather than as a list. With fewer than two words it renders the word and does nothing. Set autoplay to false to keep it still, for example while it is off screen. Under prefers-reduced-motion: reduce the words cross-fade in place over 0.2s with no travel.",
+  "demoChildren": ["slow mornings", "long deadlines", "Sunday visitors", "the drive to Ikeja"],
+  "tags": ["text", "headline", "loop", "rotating words"],
+  "plugins": [],
+  "dependencies": ["gsap@3.13.0", "@gsap/react@2.1.2"],
+  "added": "2026-10-20"
+}

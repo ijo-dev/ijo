@@ -1,0 +1,17 @@
+{
+  "name": "pinned-scroll",
+  "title": "Pinned Horizontal Scroll",
+  "export": "PinnedScroll",
+  "category": "Scroll",
+  "description": "Pins a section in place and turns vertical scrolling into a sideways walk through a row of panels.",
+  "behaviour": "When the top of the section reaches the top of the viewport it pins there, and further scrolling moves the row of PinnedScrollItem panels sideways until the last panel's edge meets the section's edge. Then the section unpins and the page carries on. The scroll distance is the row's overflow times length, and it is re-measured when the window resizes, so the last panel always lands exactly at the edge. scrub smooths the row's movement behind the scrollbar; snap settles it on the nearest panel when scrolling stops. Pass scroller when the section lives inside its own scrolling box. If the panels fit without overflowing, nothing pins. Under prefers-reduced-motion: reduce nothing is pinned or scroll-driven: the row becomes an ordinary sideways strip that people swipe or scroll themselves.",
+  "demoChildren": [
+    "<h3>V60</h3><p>15g coffee, 250g water at 94°C, three minutes.</p>",
+    "<h3>French press</h3><p>30g coarse, 500g water, four minutes, plunge slowly.</p>",
+    "<h3>Moka pot</h3><p>Fill to the valve, medium heat, off the moment it gurgles.</p>"
+  ],
+  "tags": ["scroll", "pin", "horizontal", "gallery", "ScrollTrigger"],
+  "plugins": ["ScrollTrigger"],
+  "dependencies": ["gsap@3.13.0", "@gsap/react@2.1.2"],
+  "added": "2026-10-20"
+}

@@ -1,0 +1,49 @@
+<!--
+  Image Reveal Mask — uncovers an image with a sliding mask as it scrolls into view,
+  while the image settles from a slight zoom. Plays once.
+  Under prefers-reduced-motion: reduce the image fades in instead.
+-->
+<div data-slot="image-reveal" id="image-reveal" style="overflow: hidden; aspect-ratio: 3 / 2">
+  <div data-slot="image-reveal-media" style="width: 100%; height: 100%">
+    <img src="/roastery.avif" alt="The roastery in Yaba" style="width: 100%; height: 100%; object-fit: cover" />
+  </div>
+</div>
+
+<script type="module">
+  import gsap from "https://cdn.jsdelivr.net/npm/gsap@3.13.0/index.js";
+  import { ScrollTrigger } from "https://cdn.jsdelivr.net/npm/gsap@3.13.0/ScrollTrigger.js";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const HIDDEN = {
+    up: "inset(100% 0% 0% 0%)",
+    down: "inset(0% 0% 100% 0%)",
+    left: "inset(0% 0% 0% 100%)",
+    right: "inset(0% 100% 0% 0%)",
+  };
+  const frame = document.querySelector("#image-reveal");
+  const media = frame.querySelector("[data-slot='image-reveal-media']");
+  const options = { duration: 1.2, direction: "up", zoom: 1.25, ease: "expo.inOut", start: "top 85%" };
+
+  gsap.matchMedia().add(
+    {
+      motion: "(prefers-reduced-motion: no-preference)",
+      reduced: "(prefers-reduced-motion: reduce)",
+    },
+    (context) => {
+      const scrollTrigger = { trigger: frame, start: options.start, once: true };
+      if (context.conditions.reduced) {
+        gsap.from(frame, { opacity: 0, duration: 0.3, clearProps: "opacity", scrollTrigger });
+        return;
+      }
+      gsap
+        .timeline({ scrollTrigger })
+        .fromTo(
+          frame,
+          { clipPath: HIDDEN[options.direction] },
+          { clipPath: "inset(0% 0% 0% 0%)", duration: options.duration, ease: options.ease }
+        )
+        .from(media, { scale: options.zoom, duration: options.duration * 1.2, ease: "power2.out" }, 0);
+    }
+  );
+</script>

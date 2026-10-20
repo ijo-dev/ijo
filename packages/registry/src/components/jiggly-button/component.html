@@ -1,0 +1,25 @@
+<!--
+  Jiggly Button — squashes and wobbles back into shape when you hover or press it.
+  Never moves under prefers-reduced-motion: reduce.
+-->
+<button type="button" data-slot="jiggly-button" id="jiggly-button">Add to cart</button>
+
+<script type="module">
+  import gsap from "https://cdn.jsdelivr.net/npm/gsap@3.13.0/index.js";
+
+  const button = document.querySelector("#jiggly-button");
+  const options = { intensity: 0.5, duration: 0.8, ease: "elastic.out(1.2, 0.3)", trigger: "both" };
+
+  const jiggle = () => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const squash = 0.18 * options.intensity;
+    gsap.killTweensOf(button);
+    gsap
+      .timeline()
+      .to(button, { scaleX: 1 + squash, scaleY: 1 - squash, duration: 0.1, ease: "power2.out" })
+      .to(button, { scaleX: 1, scaleY: 1, duration: options.duration, ease: options.ease });
+  };
+
+  button.addEventListener("pointerenter", () => options.trigger !== "press" && jiggle());
+  button.addEventListener("pointerdown", () => options.trigger !== "hover" && jiggle());
+</script>

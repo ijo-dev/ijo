@@ -1,0 +1,43 @@
+<!--
+  Marquee — an endless strip that slides past at a steady pace.
+  Pauses off screen and on hover or focus. Stays still under prefers-reduced-motion: reduce.
+  The script duplicates the items itself, so write each item once.
+-->
+<div data-slot="marquee" id="marquee" style="overflow: hidden">
+  <div data-slot="marquee-track" style="display: flex; width: max-content">
+    <div data-slot="marquee-copy" style="display: flex; flex-shrink: 0; gap: 32px; padding-inline-end: 32px">
+      <div data-slot="marquee-item">Yaba</div>
+      <div data-slot="marquee-item">Ikeja</div>
+      <div data-slot="marquee-item">Lekki</div>
+      <div data-slot="marquee-item">Surulere</div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import gsap from "https://cdn.jsdelivr.net/npm/gsap@3.13.0/index.js";
+
+  const strip = document.querySelector("#marquee");
+  const row = strip.querySelector("[data-slot='marquee-track']");
+  const options = { duration: 24, direction: "left", pauseOnHover: true };
+
+  // A second, hidden copy makes the loop seamless.
+  const copy = row.firstElementChild.cloneNode(true);
+  copy.setAttribute("aria-hidden", "true");
+  copy.inert = true;
+  row.append(copy);
+
+  gsap.matchMedia().add("(prefers-reduced-motion: no-preference)", () => {
+    const [from, to] = options.direction === "left" ? [0, -50] : [-50, 0];
+    const loop = gsap.fromTo(row, { xPercent: from }, { xPercent: to, duration: options.duration, ease: "none", repeat: -1 });
+    const observer = new IntersectionObserver(([entry]) => loop.paused(!entry.isIntersecting));
+    observer.observe(strip);
+
+    const ease = (timeScale) => options.pauseOnHover && gsap.to(loop, { timeScale, duration: 0.5, overwrite: true });
+    strip.addEventListener("pointerenter", () => ease(0));
+    strip.addEventListener("pointerleave", () => ease(1));
+    strip.addEventListener("focusin", () => ease(0));
+    strip.addEventListener("focusout", () => ease(1));
+    return () => observer.disconnect();
+  });
+</script>

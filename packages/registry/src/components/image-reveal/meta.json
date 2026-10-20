@@ -1,0 +1,14 @@
+{
+  "name": "image-reveal",
+  "title": "Image Reveal Mask",
+  "export": "ImageReveal",
+  "item": null,
+  "category": "Scroll",
+  "description": "Uncovers an image with a sliding mask as it scrolls into view, while the image settles from a slight zoom.",
+  "behaviour": "The frame starts fully masked. When its top reaches start in the viewport, the mask opens in the chosen direction over duration while the image inside eases down from zoom to its natural size, so the picture seems to arrive from slightly closer. The mask is a clip-path inset rather than a transform, because the frame has to keep its size in the layout while only its visible area grows; the zoom is a transform. It plays once and then leaves the image as authored. The frame clips its contents, so give the child a width and height (for example width: 100% and object-fit: cover). Pass scroller when the image lives inside its own scrolling box. Under prefers-reduced-motion: reduce there is no mask or zoom and the image fades in over 0.3s.",
+  "demoChildren": ["<img src=\"/roastery.avif\" alt=\"The roastery in Yaba\" />"],
+  "tags": ["image", "mask", "clip-path", "scroll", "reveal"],
+  "plugins": ["ScrollTrigger"],
+  "dependencies": ["gsap@3.13.0", "@gsap/react@2.1.2"],
+  "added": "2026-10-20"
+}
