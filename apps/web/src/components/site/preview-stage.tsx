@@ -47,7 +47,7 @@ export function PreviewStage({
           observer.disconnect();
         }
       },
-      { rootMargin: "200px" }
+      { rootMargin: "200px" },
     );
     observer.observe(node);
     return () => observer.disconnect();
@@ -59,12 +59,18 @@ export function PreviewStage({
       data-testid="preview-stage"
       data-ready={visible || undefined}
       className={clsx(
-        "relative flex items-center justify-center rounded-lg bg-surface-2 p-6 shadow-ring-hairline",
-        className
+        "relative flex min-w-0 items-center justify-center rounded-lg bg-surface-2 p-6 shadow-ring-hairline",
+        className,
       )}
       style={{ minHeight }}
     >
-      {visible ? <div key={replayKey}>{children}</div> : null}
+      {/* Full width, so a demo sized "w-full max-w-…" fills the stage and never pushes
+          it wider than the screen on a phone. */}
+      {visible ? (
+        <div key={replayKey} className="flex w-full min-w-0 justify-center">
+          {children}
+        </div>
+      ) : null}
 
       {onReplay ? (
         <button
