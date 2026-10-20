@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useState } from "react";
 import { PinnedScroll, PinnedScrollItem, type PinnedScrollProps } from "./component";
 
 const GUIDES = [
@@ -30,7 +30,8 @@ const GUIDES = [
 export function PinnedScrollDemo(
   props: Omit<PinnedScrollProps, "children" | "scroller"> & { duration?: number },
 ) {
-  const box = useRef<HTMLDivElement>(null);
+  // A callback ref into state: the trigger is built once the scrolling box exists.
+  const [box, setBox] = useState<HTMLDivElement | null>(null);
   // The library card's still poster passes a duration; this component has none to use.
   const { duration: _poster, ...rest } = props;
   void _poster;
@@ -38,7 +39,7 @@ export function PinnedScrollDemo(
   return (
     <div className="flex w-full max-w-[520px] flex-col gap-2">
       <p className="text-[12px] text-[var(--text-faint)]">Scroll down inside the box</p>
-      <div ref={box} className="h-[280px] overflow-y-auto rounded-[14px] bg-[var(--surface-1)]">
+      <div ref={setBox} className="h-[280px] overflow-y-auto rounded-[14px] bg-[var(--surface-1)]">
         <div className="flex h-[140px] flex-col justify-end p-5">
           <h3 className="text-[20px] font-semibold text-[var(--text)]">Brew it at home</h3>
           <p className="text-[14px] text-[var(--text-muted)]">Four ways with the same bag.</p>

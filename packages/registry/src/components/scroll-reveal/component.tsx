@@ -22,8 +22,12 @@ export type ScrollRevealProps = {
   start?: string;
   /** Reveal once and stay, or hide again when scrolled back above. */
   once?: boolean;
-  /** The element that scrolls, if it isn't the page. */
-  scroller?: React.RefObject<HTMLElement | null>;
+  /**
+   * The element that scrolls, if it isn't the page. Pass the element itself (from a
+   * callback ref or useState). While it is `null` nothing is set up; leave it out to
+   * use the page.
+   */
+  scroller?: HTMLElement | null;
   className?: string;
 };
 
@@ -49,6 +53,8 @@ export function ScrollReveal({
 
   useGSAP(
     () => {
+      // A scroller was asked for but isn't mounted yet: wait for it.
+      if (scroller === null) return;
       const items = gsap.utils.toArray<HTMLElement>("[data-slot='scroll-reveal-item']");
       if (items.length === 0) return;
 
@@ -62,7 +68,7 @@ export function ScrollReveal({
             gsap.to(batch, { opacity: 0, y: distance, duration: duration / 2, overwrite: true });
 
           ScrollTrigger.batch(items, {
-            scroller: scroller?.current ?? undefined,
+            scroller: scroller ?? undefined,
             start,
             once,
             onEnter: show,
