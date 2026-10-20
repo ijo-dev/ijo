@@ -69,12 +69,21 @@ const setup = () => {
   }, scope.value);
 };
 
+const onEscape = (event: KeyboardEvent) => {
+  if (event.key === "Escape") open.value = false;
+};
+
 watch(open, async (isOpen) => {
+  // Escape closes it from anywhere, even before focus has moved into the drawer.
+  if (isOpen) document.addEventListener("keydown", onEscape);
+  else document.removeEventListener("keydown", onEscape);
   if (!tl) return;
   if (isOpen) {
     tl.timeScale(1).play();
     await nextTick();
-    requestAnimationFrame(() => requestAnimationFrame(() => panel.value?.querySelector<HTMLElement>(FOCUSABLE)?.focus()));
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => open.value && panel.value?.querySelector<HTMLElement>(FOCUSABLE)?.focus())
+    );
   } else {
     tl.timeScale(1.6).reverse();
     if (panel.value?.contains(document.activeElement)) trigger.value?.focus();
@@ -82,7 +91,6 @@ watch(open, async (isOpen) => {
 });
 
 const onKeyDown = (event: KeyboardEvent) => {
-  if (event.key === "Escape") open.value = false;
   if (event.key !== "Tab" || !panel.value) return;
   const stops = [...panel.value.querySelectorAll<HTMLElement>(FOCUSABLE)];
   const [first, last] = [stops[0], stops[stops.length - 1]];
@@ -97,7 +105,10 @@ const onKeyDown = (event: KeyboardEvent) => {
 
 onMounted(setup);
 watch(() => ({ ...props }), setup, { deep: true });
-onUnmounted(() => ctx?.revert());
+onUnmounted(() => {
+  ctx?.revert();
+  document.removeEventListener("keydown", onEscape);
+});
 </script>
 
 <template>
