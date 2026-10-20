@@ -1,0 +1,16 @@
+{
+  "name": "accordion",
+  "title": "Accordion",
+  "export": "Accordion",
+  "category": "UI",
+  "description": "Sections that open and close smoothly, built on the browser's own details element.",
+  "behaviour": "Each AccordionItem is a native <details> element with your <summary> as its heading, so it opens with the keyboard, works before JavaScript has loaded, and is found by in-page search. When the summary is clicked or activated with Enter or Space, the item's height animates from its current size to its open or closed size over duration. Clicking again mid-animation reverses smoothly from wherever it is. With single on, opening one section closes any other that is open. Height is animated deliberately here, because the content below has to move down to make room; when the animation ends the inline height is cleared so the section can grow with its content. Under prefers-reduced-motion: reduce sections open and close instantly.",
+  "demoChildren": [
+    "<summary>Do you deliver outside Lagos?</summary><p>Yes, to every state, in 2–4 working days.</p>",
+    "<summary>Can I get it ground?</summary><p>Choose whole bean, or a grind for V60, French press or moka pot.</p>"
+  ],
+  "tags": ["accordion", "faq", "disclosure", "details", "collapse"],
+  "plugins": [],
+  "dependencies": ["gsap@3.13.0", "@gsap/react@2.1.2"],
+  "added": "2026-10-20"
+}

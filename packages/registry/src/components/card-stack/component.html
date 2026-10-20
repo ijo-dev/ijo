@@ -1,0 +1,76 @@
+<!--
+  Card Stack — the top card lifts away and slides to the back, and the rest move up.
+  Under prefers-reduced-motion: reduce cards swap with a quick fade.
+-->
+<style>
+  [data-slot="card-stack-pile"] { display: grid; padding-bottom: 28px; }
+  [data-slot="card-stack-item"] { grid-area: 1 / 1; }
+  [data-slot="card-stack"] .sr-only {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+  }
+</style>
+
+<div data-slot="card-stack" id="card-stack">
+  <div data-slot="card-stack-pile">
+    <div data-slot="card-stack-item">Ìjẹ̀bú dark roast · ₦7,200</div>
+    <div data-slot="card-stack-item">Ọ̀yọ́ medium roast · ₦6,800</div>
+    <div data-slot="card-stack-item">Èkó espresso blend · ₦7,500</div>
+  </div>
+  <button type="button" data-slot="card-stack-next">Next card</button>
+  <span role="status" class="sr-only"></span>
+</div>
+
+<script type="module">
+  import gsap from "https://cdn.jsdelivr.net/npm/gsap@3.13.0/index.js";
+
+  const root = document.querySelector("#card-stack");
+  const pile = root.querySelector("[data-slot='card-stack-pile']");
+  const status = root.querySelector("[role='status']");
+  const options = { duration: 0.7, offset: 14, rotation: 4, ease: "power3.out" };
+  const original = [...root.querySelectorAll("[data-slot='card-stack-item']")];
+  let order = original;
+  let busy = false;
+
+  const place = (cards) => ({
+    y: (i) => i * options.offset,
+    scale: (i) => 1 - Math.min(i, 3) * 0.05,
+    rotation: (i) => (i === 0 ? 0 : i % 2 ? options.rotation : -options.rotation),
+    opacity: (i) => (i > 2 ? 0 : 1),
+    zIndex: (i) => cards.length - i,
+  });
+  const settle = (cards) =>
+    cards.forEach((card, i) => {
+      card.inert = i !== 0;
+      card.setAttribute("aria-hidden", String(i !== 0));
+    });
+
+  gsap.set(order, place(order));
+  settle(order);
+
+  const next = () => {
+    const [top, ...rest] = order;
+    if (!top || rest.length === 0 || busy) return;
+    const cards = [...rest, top];
+    order = cards;
+    busy = true;
+    const done = () => {
+      busy = false;
+      settle(cards);
+      status.textContent = `Card ${original.indexOf(cards[0]) + 1} of ${cards.length}`;
+    };
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      gsap.timeline({ onComplete: done }).to(top, { opacity: 0, duration: 0.15 }).set(cards, place(cards)).from(cards[0], { opacity: 0, duration: 0.15 });
+      return;
+    }
+    gsap
+      .timeline({ onComplete: done })
+      .to(top, { yPercent: -60, rotation: -options.rotation * 3, duration: options.duration * 0.45, ease: "power2.in" })
+      .set(cards, { zIndex: (i) => cards.length - i })
+      .to(cards, { ...place(cards), yPercent: 0, duration: options.duration * 0.55, ease: options.ease, stagger: 0.03 });
+  };
+
+  pile.addEventListener("click", (event) => {
+    if (!event.target.closest("a, button, input, select, textarea")) next();
+  });
+  root.querySelector("[data-slot='card-stack-next']").addEventListener("click", next);
+</script>

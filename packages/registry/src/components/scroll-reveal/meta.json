@@ -1,0 +1,17 @@
+{
+  "name": "scroll-reveal",
+  "title": "Scroll Reveal Stagger",
+  "export": "ScrollReveal",
+  "category": "Scroll",
+  "description": "Reveals items as they scroll into view, in small staggered groups.",
+  "behaviour": "Each child wrapped in ScrollRevealItem starts transparent and distance pixels below its place. When its top reaches start in the viewport it rises and fades in. Items that cross the line together, such as a row of cards, are batched into one reveal staggered by stagger, so a fast scroll down a long list never queues up a slow parade. With once off, items hide again when you scroll back above them and replay on the way down. Pass scroller when the list lives inside its own scrolling box rather than the page. All triggers are created inside useGSAP and are killed on unmount or when a prop changes. Under prefers-reduced-motion: reduce nothing is hidden or moved and every item is simply visible.",
+  "demoChildren": [
+    "<h3>Ìjẹ̀bú dark roast</h3><p>₦7,200</p>",
+    "<h3>Ọ̀yọ́ medium roast</h3><p>₦6,800</p>",
+    "<h3>Èkó espresso blend</h3><p>₦7,500</p>"
+  ],
+  "tags": ["scroll", "reveal", "stagger", "list", "cards", "ScrollTrigger"],
+  "plugins": ["ScrollTrigger"],
+  "dependencies": ["gsap@3.13.0", "@gsap/react@2.1.2"],
+  "added": "2026-10-20"
+}

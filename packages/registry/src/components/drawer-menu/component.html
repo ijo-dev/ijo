@@ -1,0 +1,78 @@
+<!--
+  Drawer Menu — a menu button that slides a drawer in from the side, its links following.
+  Escape, the backdrop and the close button close it; focus stays inside while open.
+  Under prefers-reduced-motion: reduce the drawer fades in place.
+-->
+<style>
+  [data-slot="drawer-menu-layer"] { position: fixed; inset: 0; z-index: 50; visibility: hidden; }
+  [data-slot="drawer-menu-overlay"] { position: absolute; inset: 0; background: rgb(0 0 0 / 0.5); }
+  [data-slot="drawer-menu-panel"] { position: absolute; top: 0; bottom: 0; right: 0; width: min(320px, 85%); overflow-y: auto; }
+</style>
+
+<div data-slot="drawer-menu" id="drawer-menu">
+  <button type="button" data-slot="drawer-menu-trigger" aria-expanded="false" aria-controls="drawer-menu-panel">Menu</button>
+  <div data-slot="drawer-menu-layer">
+    <div data-slot="drawer-menu-overlay"></div>
+    <div id="drawer-menu-panel" role="dialog" aria-modal="true" aria-label="Menu" data-slot="drawer-menu-panel">
+      <button type="button" data-slot="drawer-menu-close">Close</button>
+      <nav aria-label="Menu">
+        <div data-slot="drawer-menu-item"><a href="/shop">Shop</a></div>
+        <div data-slot="drawer-menu-item"><a href="/roasts">Our roasts</a></div>
+        <div data-slot="drawer-menu-item"><a href="/brew">Brew guides</a></div>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import gsap from "https://cdn.jsdelivr.net/npm/gsap@3.13.0/index.js";
+
+  const root = document.querySelector("#drawer-menu");
+  const trigger = root.querySelector("[data-slot='drawer-menu-trigger']");
+  const layer = root.querySelector("[data-slot='drawer-menu-layer']");
+  const panel = root.querySelector("[data-slot='drawer-menu-panel']");
+  const options = { duration: 0.55, side: "right", stagger: 0.05, ease: "expo.out" };
+  const FOCUSABLE = "a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex='-1'])";
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const offset = options.side === "right" ? 1 : -1;
+
+  const tl = gsap
+    .timeline({ paused: true })
+    .set(layer, { visibility: "visible" })
+    .fromTo(root.querySelector("[data-slot='drawer-menu-overlay']"), { opacity: 0 }, { opacity: 1, duration: 0.3 })
+    .fromTo(panel, reduced ? { opacity: 0 } : { xPercent: 100 * offset }, reduced ? { opacity: 1, duration: 0.2 } : { xPercent: 0, duration: options.duration, ease: options.ease }, 0)
+    .fromTo(
+      root.querySelectorAll("[data-slot='drawer-menu-item']"),
+      { opacity: 0, x: reduced ? 0 : 24 * offset },
+      { opacity: 1, x: 0, duration: reduced ? 0.2 : options.duration * 0.8, ease: options.ease, stagger: reduced ? 0 : options.stagger },
+      reduced ? 0 : options.duration * 0.3
+    );
+
+  const setOpen = (open) => {
+    trigger.setAttribute("aria-expanded", String(open));
+    if (open) {
+      tl.timeScale(1).play();
+      requestAnimationFrame(() => requestAnimationFrame(() => panel.querySelector(FOCUSABLE)?.focus()));
+    } else {
+      tl.timeScale(1.6).reverse();
+      if (panel.contains(document.activeElement)) trigger.focus();
+    }
+  };
+
+  trigger.addEventListener("click", () => setOpen(true));
+  root.querySelector("[data-slot='drawer-menu-overlay']").addEventListener("click", () => setOpen(false));
+  root.querySelector("[data-slot='drawer-menu-close']").addEventListener("click", () => setOpen(false));
+  layer.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") setOpen(false);
+    if (event.key !== "Tab") return;
+    const stops = [...panel.querySelectorAll(FOCUSABLE)];
+    const [first, last] = [stops[0], stops[stops.length - 1]];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
+</script>

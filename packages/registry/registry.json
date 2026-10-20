@@ -4,6 +4,166 @@
   "homepage": "https://ijo-flame.vercel.app",
   "items": [
     {
+      "name": "accordion",
+      "type": "registry:component",
+      "title": "Accordion",
+      "description": "Sections that open and close smoothly, built on the browser's own details element.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "gsap@3.13.0",
+        "@gsap/react@2.1.2"
+      ],
+      "files": [
+        {
+          "path": "src/components/accordion/component.tsx",
+          "type": "registry:component",
+          "target": "components/ijo/accordion.tsx"
+        }
+      ]
+    },
+    {
+      "name": "card-stack",
+      "type": "registry:component",
+      "title": "Card Stack",
+      "description": "A pile of cards: the top one lifts away and slides to the back, and the rest move up.",
+      "categories": [
+        "ui"
+      ],
+      "dependencies": [
+        "gsap@3.13.0",
+        "@gsap/react@2.1.2"
+      ],
+      "files": [
+        {
+          "path": "src/components/card-stack/component.tsx",
+          "type": "registry:component",
+          "target": "components/ijo/card-stack.tsx"
+        }
+      ]
+    },
+    {
+      "name": "drawer-menu",
+      "type": "registry:component",
+      "title": "Drawer Menu",
+      "description": "A menu button that slides a drawer in from the side, its links following one after another.",
+      "categories": [
+        "menus"
+      ],
+      "dependencies": [
+        "gsap@3.13.0",
+        "@gsap/react@2.1.2"
+      ],
+      "files": [
+        {
+          "path": "src/components/drawer-menu/component.tsx",
+          "type": "registry:component",
+          "target": "components/ijo/drawer-menu.tsx"
+        }
+      ]
+    },
+    {
+      "name": "image-reveal",
+      "type": "registry:component",
+      "title": "Image Reveal Mask",
+      "description": "Uncovers an image with a sliding mask as it scrolls into view, while the image settles from a slight zoom.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [
+        "gsap@3.13.0",
+        "@gsap/react@2.1.2"
+      ],
+      "files": [
+        {
+          "path": "src/components/image-reveal/component.tsx",
+          "type": "registry:component",
+          "target": "components/ijo/image-reveal.tsx"
+        }
+      ]
+    },
+    {
+      "name": "jiggly-button",
+      "type": "registry:component",
+      "title": "Jiggly Button",
+      "description": "A button that squashes and wobbles back into shape, like jelly, when you hover or press it.",
+      "categories": [
+        "buttons"
+      ],
+      "dependencies": [
+        "gsap@3.13.0",
+        "@gsap/react@2.1.2"
+      ],
+      "files": [
+        {
+          "path": "src/components/jiggly-button/component.tsx",
+          "type": "registry:component",
+          "target": "components/ijo/jiggly-button.tsx"
+        }
+      ]
+    },
+    {
+      "name": "magnetic-button",
+      "type": "registry:component",
+      "title": "Magnetic Button",
+      "description": "A button that leans toward the pointer while it hovers, then springs back when it leaves.",
+      "categories": [
+        "buttons"
+      ],
+      "dependencies": [
+        "gsap@3.13.0",
+        "@gsap/react@2.1.2"
+      ],
+      "files": [
+        {
+          "path": "src/components/magnetic-button/component.tsx",
+          "type": "registry:component",
+          "target": "components/ijo/magnetic-button.tsx"
+        }
+      ]
+    },
+    {
+      "name": "marquee",
+      "type": "registry:component",
+      "title": "Marquee",
+      "description": "An endless strip of logos, words or cards that slides past at a steady pace.",
+      "categories": [
+        "sections"
+      ],
+      "dependencies": [
+        "gsap@3.13.0",
+        "@gsap/react@2.1.2"
+      ],
+      "files": [
+        {
+          "path": "src/components/marquee/component.tsx",
+          "type": "registry:component",
+          "target": "components/ijo/marquee.tsx"
+        }
+      ]
+    },
+    {
+      "name": "pinned-scroll",
+      "type": "registry:component",
+      "title": "Pinned Horizontal Scroll",
+      "description": "Pins a section in place and turns vertical scrolling into a sideways walk through a row of panels.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [
+        "gsap@3.13.0",
+        "@gsap/react@2.1.2"
+      ],
+      "files": [
+        {
+          "path": "src/components/pinned-scroll/component.tsx",
+          "type": "registry:component",
+          "target": "components/ijo/pinned-scroll.tsx"
+        }
+      ]
+    },
+    {
       "name": "rise-in",
       "type": "registry:component",
       "title": "Rise In",
@@ -20,6 +180,86 @@
           "path": "src/components/rise-in/component.tsx",
           "type": "registry:component",
           "target": "components/ijo/rise-in.tsx"
+        }
+      ]
+    },
+    {
+      "name": "scramble-text",
+      "type": "registry:component",
+      "title": "Scramble Text",
+      "description": "Shuffles a line of text through random characters until it settles on the real words.",
+      "categories": [
+        "text"
+      ],
+      "dependencies": [
+        "gsap@3.13.0",
+        "@gsap/react@2.1.2"
+      ],
+      "files": [
+        {
+          "path": "src/components/scramble-text/component.tsx",
+          "type": "registry:component",
+          "target": "components/ijo/scramble-text.tsx"
+        }
+      ]
+    },
+    {
+      "name": "scroll-reveal",
+      "type": "registry:component",
+      "title": "Scroll Reveal Stagger",
+      "description": "Reveals items as they scroll into view, in small staggered groups.",
+      "categories": [
+        "scroll"
+      ],
+      "dependencies": [
+        "gsap@3.13.0",
+        "@gsap/react@2.1.2"
+      ],
+      "files": [
+        {
+          "path": "src/components/scroll-reveal/component.tsx",
+          "type": "registry:component",
+          "target": "components/ijo/scroll-reveal.tsx"
+        }
+      ]
+    },
+    {
+      "name": "text-reveal",
+      "type": "registry:component",
+      "title": "Text Reveal",
+      "description": "Slides a heading or paragraph up from behind a mask, one line, word or letter at a time.",
+      "categories": [
+        "text"
+      ],
+      "dependencies": [
+        "gsap@3.13.0",
+        "@gsap/react@2.1.2"
+      ],
+      "files": [
+        {
+          "path": "src/components/text-reveal/component.tsx",
+          "type": "registry:component",
+          "target": "components/ijo/text-reveal.tsx"
+        }
+      ]
+    },
+    {
+      "name": "word-roller",
+      "type": "registry:component",
+      "title": "Word Roller",
+      "description": "Rolls one word in a sentence through a list of alternatives, like a split-flap sign.",
+      "categories": [
+        "text"
+      ],
+      "dependencies": [
+        "gsap@3.13.0",
+        "@gsap/react@2.1.2"
+      ],
+      "files": [
+        {
+          "path": "src/components/word-roller/component.tsx",
+          "type": "registry:component",
+          "target": "components/ijo/word-roller.tsx"
         }
       ]
     }

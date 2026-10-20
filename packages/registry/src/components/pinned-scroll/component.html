@@ -1,0 +1,48 @@
+<!--
+  Pinned Horizontal Scroll — pins a section and turns vertical scrolling into a sideways
+  walk through a row of panels. Under prefers-reduced-motion: reduce nothing pins and
+  the row scrolls sideways on its own.
+-->
+<style>
+  [data-slot="pinned-scroll"] { overflow-x: auto; overscroll-behavior-x: contain; height: 100vh; }
+  [data-slot="pinned-scroll-track"] { display: flex; width: max-content; height: 100%; }
+  [data-slot="pinned-scroll-item"] { flex-shrink: 0; width: 80vw; }
+</style>
+
+<section data-slot="pinned-scroll" id="pinned-scroll">
+  <div data-slot="pinned-scroll-track">
+    <div data-slot="pinned-scroll-item"><h3>V60</h3><p>15g coffee, 250g water at 94°C.</p></div>
+    <div data-slot="pinned-scroll-item"><h3>French press</h3><p>30g coarse, four minutes.</p></div>
+    <div data-slot="pinned-scroll-item"><h3>Moka pot</h3><p>Off the heat the moment it gurgles.</p></div>
+  </div>
+</section>
+
+<script type="module">
+  import gsap from "https://cdn.jsdelivr.net/npm/gsap@3.13.0/index.js";
+  import { ScrollTrigger } from "https://cdn.jsdelivr.net/npm/gsap@3.13.0/ScrollTrigger.js";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const section = document.querySelector("#pinned-scroll");
+  const row = section.querySelector("[data-slot='pinned-scroll-track']");
+  const panels = section.querySelectorAll("[data-slot='pinned-scroll-item']");
+  const options = { scrub: 0.6, length: 1, snap: false };
+
+  gsap.matchMedia().add("(prefers-reduced-motion: no-preference)", () => {
+    const travel = () => Math.max(0, row.scrollWidth - section.clientWidth);
+    gsap.set(section, { overflowX: "hidden" });
+    gsap.to(row, {
+      x: () => -travel(),
+      ease: "none",
+      scrollTrigger: {
+        trigger: section,
+        pin: true,
+        start: "top top",
+        end: () => `+=${travel() * options.length}`,
+        scrub: options.scrub === 0 ? true : options.scrub,
+        snap: options.snap && panels.length > 1 ? 1 / (panels.length - 1) : undefined,
+        invalidateOnRefresh: true,
+      },
+    });
+  });
+</script>

@@ -1,0 +1,14 @@
+{
+  "name": "jiggly-button",
+  "title": "Jiggly Button",
+  "export": "JigglyButton",
+  "item": null,
+  "category": "Buttons",
+  "description": "A button that squashes and wobbles back into shape, like jelly, when you hover or press it.",
+  "behaviour": "On hover, press, or both, the button squashes wider and shorter in a tenth of a second, then springs back to its natural shape over duration with an elastic ease, so it wobbles a few times before settling. intensity sets how far it squashes. A new wobble overwrites one already running rather than adding to it, so pressing repeatedly never leaves the button stretched. Pressing with Enter or Space counts as a press. Scaling happens around the centre and doesn't move the hit area. It is a real button: your own onClick, onPointerEnter, onPointerDown and every other prop still work. Under prefers-reduced-motion: reduce it never moves.",
+  "demoChildren": ["Add to cart"],
+  "tags": ["button", "hover", "press", "elastic", "playful"],
+  "plugins": [],
+  "dependencies": ["gsap@3.13.0", "@gsap/react@2.1.2"],
+  "added": "2026-10-20"
+}

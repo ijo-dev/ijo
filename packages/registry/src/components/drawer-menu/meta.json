@@ -1,0 +1,13 @@
+{
+  "name": "drawer-menu",
+  "title": "Drawer Menu",
+  "export": "DrawerMenu",
+  "category": "Menus",
+  "description": "A menu button that slides a drawer in from the side, its links following one after another.",
+  "behaviour": "The trigger button opens a drawer that slides in from side over duration while a backdrop fades in behind it, then the links in each DrawerMenuItem follow, offset by stagger. Closing plays the same timeline backwards a little faster, so a close half-way through an open reverses smoothly from where it is. Escape, a click on the backdrop and the close button all close it. Focus moves to the first link-or-button in the drawer on open, Tab and Shift+Tab stay inside the drawer while it is open, and focus returns to the trigger on close. While closed the drawer is hidden with visibility, so nothing in it can be tabbed to or read out. The drawer is position: fixed, so it covers the viewport; put it inside an element with a transform if you want it contained in a box. Style it with panelClassName and triggerClassName, or target the data-slot attributes. Under prefers-reduced-motion: reduce the drawer and its links fade in place with no travel.",
+  "demoChildren": ["<a href=\"/shop\">Shop</a>", "<a href=\"/roasts\">Our roasts</a>", "<a href=\"/brew\">Brew guides</a>"],
+  "tags": ["menu", "navigation", "drawer", "off-canvas", "mobile"],
+  "plugins": [],
+  "dependencies": ["gsap@3.13.0", "@gsap/react@2.1.2"],
+  "added": "2026-10-20"
+}

@@ -1,0 +1,43 @@
+<!--
+  Magnetic Button — leans toward the pointer while it hovers, then springs back.
+  Only runs with a precise hovering pointer; never moves under prefers-reduced-motion.
+-->
+<button type="button" data-slot="magnetic-button" id="magnetic-button">
+  <span data-slot="magnetic-button-label" style="display: inline-block">Order a bag</span>
+</button>
+
+<script type="module">
+  import gsap from "https://cdn.jsdelivr.net/npm/gsap@3.13.0/index.js";
+
+  const button = document.querySelector("#magnetic-button");
+  const label = button.querySelector("[data-slot='magnetic-button-label']");
+  const options = { strength: 0.35, depth: 0.5, duration: 0.9, ease: "elastic.out(1, 0.4)" };
+
+  gsap.matchMedia().add(
+    "(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)",
+    () => {
+      const follow = { duration: 0.4, ease: "power3.out" };
+      const bx = gsap.quickTo(button, "x", follow);
+      const by = gsap.quickTo(button, "y", follow);
+      const lx = gsap.quickTo(label, "x", follow);
+      const ly = gsap.quickTo(label, "y", follow);
+      const move = (event) => {
+        const box = button.getBoundingClientRect();
+        const dx = event.clientX - (box.left + box.width / 2);
+        const dy = event.clientY - (box.top + box.height / 2);
+        bx(dx * options.strength);
+        by(dy * options.strength);
+        lx(dx * options.strength * options.depth);
+        ly(dy * options.strength * options.depth);
+      };
+      const leave = () =>
+        gsap.to([button, label], { x: 0, y: 0, duration: options.duration, ease: options.ease, overwrite: true });
+      button.addEventListener("pointermove", move);
+      button.addEventListener("pointerleave", leave);
+      return () => {
+        button.removeEventListener("pointermove", move);
+        button.removeEventListener("pointerleave", leave);
+      };
+    }
+  );
+</script>

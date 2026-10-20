@@ -1,0 +1,14 @@
+{
+  "name": "scramble-text",
+  "title": "Scramble Text",
+  "export": "ScrambleText",
+  "item": null,
+  "category": "Text",
+  "description": "Shuffles a line of text through random characters until it settles on the real words.",
+  "behaviour": "On mount the visible text turns to random characters drawn from chars, then settles letter by letter, left to right, until it reads the real text after duration seconds. The text keeps its length throughout, so the line never reflows. A visually hidden copy of the real text sits alongside, so screen readers announce the words once and never the noise. With replayOnHover on, entering with the pointer or focusing the element scrambles it again, ignoring the request if a scramble is already running. Children must be a plain string. Under prefers-reduced-motion: reduce nothing scrambles and the text fades in over 0.2s; hover replays are skipped.",
+  "demoChildren": ["ORDER BC-2047 CONFIRMED"],
+  "tags": ["text", "glitch", "decode", "terminal", "label"],
+  "plugins": ["ScrambleTextPlugin"],
+  "dependencies": ["gsap@3.13.0", "@gsap/react@2.1.2"],
+  "added": "2026-10-20"
+}

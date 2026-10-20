@@ -1,0 +1,14 @@
+{
+  "name": "magnetic-button",
+  "title": "Magnetic Button",
+  "export": "MagneticButton",
+  "item": null,
+  "category": "Buttons",
+  "description": "A button that leans toward the pointer while it hovers, then springs back when it leaves.",
+  "behaviour": "While the pointer moves over the button, the button eases toward it by strength times the pointer's distance from its centre, and the label travels a little further by depth, which reads as depth. When the pointer leaves, both spring back to rest over duration with the chosen ease. Movement uses gsap.quickTo, so a fast-moving pointer costs one tween per axis rather than one per event. The effect only switches on where there is a precise pointer that can hover, so on phones and tablets it behaves as an ordinary button, and it never moves the hit area away from a tap. Every other prop, including onClick and disabled, passes straight through to the button element. Under prefers-reduced-motion: reduce it never moves.",
+  "demoChildren": ["Order a bag"],
+  "tags": ["button", "hover", "cursor", "magnetic", "cta"],
+  "plugins": [],
+  "dependencies": ["gsap@3.13.0", "@gsap/react@2.1.2"],
+  "added": "2026-10-20"
+}

@@ -1,0 +1,49 @@
+<!--
+  Scramble Text — shuffles a line through random characters until it settles on the real words.
+  Under prefers-reduced-motion: reduce the text fades in instead.
+-->
+<style>
+  [data-slot="scramble-text"] { position: relative; display: inline-block; }
+  [data-slot="scramble-text"] .sr-only {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+  }
+</style>
+
+<span data-slot="scramble-text" id="scramble-text">
+  <span class="sr-only">ORDER BC-2047 CONFIRMED</span>
+  <span data-slot="scramble-text-visual" aria-hidden="true">ORDER BC-2047 CONFIRMED</span>
+</span>
+
+<script type="module">
+  import gsap from "https://cdn.jsdelivr.net/npm/gsap@3.13.0/index.js";
+  import { ScrambleTextPlugin } from "https://cdn.jsdelivr.net/npm/gsap@3.13.0/ScrambleTextPlugin.js";
+
+  gsap.registerPlugin(ScrambleTextPlugin);
+
+  const root = document.querySelector("#scramble-text");
+  const el = root.querySelector("[data-slot='scramble-text-visual']");
+  const text = el.textContent.trim();
+  const options = {
+    duration: 1.2,
+    chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+    revealDelay: 0.3,
+    speed: 0.6,
+    replayOnHover: false,
+  };
+
+  const scramble = () =>
+    gsap.to(el, {
+      duration: options.duration,
+      scrambleText: { text, chars: options.chars, revealDelay: options.revealDelay, speed: options.speed, tweenLength: false },
+    });
+
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduced) gsap.from(el, { opacity: 0, duration: 0.2, clearProps: "opacity" });
+  else scramble();
+
+  const replay = () => {
+    if (options.replayOnHover && !reduced && !gsap.isTweening(el)) scramble();
+  };
+  root.addEventListener("pointerenter", replay);
+  root.addEventListener("focusin", replay);
+</script>

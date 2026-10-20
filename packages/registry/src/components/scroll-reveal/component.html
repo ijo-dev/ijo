@@ -1,0 +1,36 @@
+<!--
+  Scroll Reveal Stagger — reveals items as they scroll into view, in small staggered groups.
+  Under prefers-reduced-motion: reduce every item is simply visible.
+-->
+<div data-slot="scroll-reveal" id="scroll-reveal">
+  <div data-slot="scroll-reveal-item">Ìjẹ̀bú dark roast · ₦7,200</div>
+  <div data-slot="scroll-reveal-item">Ọ̀yọ́ medium roast · ₦6,800</div>
+  <div data-slot="scroll-reveal-item">Èkó espresso blend · ₦7,500</div>
+</div>
+
+<script type="module">
+  import gsap from "https://cdn.jsdelivr.net/npm/gsap@3.13.0/index.js";
+  import { ScrollTrigger } from "https://cdn.jsdelivr.net/npm/gsap@3.13.0/ScrollTrigger.js";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const scope = document.querySelector("#scroll-reveal");
+  const options = { duration: 0.7, distance: 32, stagger: 0.08, ease: "power3.out", start: "top 85%", once: true };
+
+  const ctx = gsap.context(() => {
+    const items = gsap.utils.toArray("[data-slot='scroll-reveal-item']");
+    if (items.length === 0) return;
+    gsap.matchMedia().add("(prefers-reduced-motion: no-preference)", () => {
+      gsap.set(items, { opacity: 0, y: options.distance });
+      ScrollTrigger.batch(items, {
+        start: options.start,
+        once: options.once,
+        onEnter: (batch) =>
+          gsap.to(batch, { opacity: 1, y: 0, duration: options.duration, ease: options.ease, stagger: options.stagger, overwrite: true }),
+        onLeaveBack: options.once
+          ? undefined
+          : (batch) => gsap.to(batch, { opacity: 0, y: options.distance, duration: options.duration / 2, overwrite: true }),
+      });
+    });
+  }, scope);
+</script>
