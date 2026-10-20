@@ -32,16 +32,21 @@ export function buildSnippet(
   controls: Controls,
   values: ControlValues,
   framework: Framework,
-  children: string[]
+  children: string[],
 ): string {
   const props = changed(controls, values);
-  const item = `${meta.export}Item`;
+  // Most components wrap each child in an Item; some (a button) take children as-is.
+  const item = meta.item === undefined ? `${meta.export}Item` : meta.item;
+  const wrap = (line: string, tag: string) => (tag ? `<${tag}>${line}</${tag}>` : line);
+  const slot = item ? `div data-slot="${meta.name}-item"` : "";
+  const wrapSlot = (line: string) => (item ? `<${slot}>${line}</div>` : line);
 
   if (framework === "react") {
     const attrs = props.map(([key, value]) => ` ${key}=${jsxValue(value)}`).join("");
-    const body = children.map((line) => `  <${item}>${line}</${item}>`).join("\n");
+    const body = children.map((line) => `  ${wrap(line, item ?? "")}`).join("\n");
+    const names = item ? `${meta.export}, ${item}` : meta.export;
     return [
-      `import { ${meta.export}, ${item} } from "@/components/ijo/${meta.name}";`,
+      `import { ${names} } from "@/components/ijo/${meta.name}";`,
       ``,
       `<${meta.export}${attrs}>`,
       body,
@@ -51,9 +56,7 @@ export function buildSnippet(
 
   if (framework === "vue") {
     const attrs = props.map(([key, value]) => ` ${vueValue(key, value)}`).join("");
-    const body = children
-      .map((line) => `    <div data-slot="${meta.name}-item">${line}</div>`)
-      .join("\n");
+    const body = children.map((line) => `    ${wrapSlot(line)}`).join("\n");
     return [
       `<script setup lang="ts">`,
       `import ${meta.export} from "@/components/ijo/${meta.name}.vue";`,
@@ -70,9 +73,7 @@ export function buildSnippet(
   const options = Object.keys(controls)
     .map((key) => `  ${key}: ${jsValue(values[key] as ControlValues[string])},`)
     .join("\n");
-  const body = children
-    .map((line) => `  <div data-slot="${meta.name}-item">${line}</div>`)
-    .join("\n");
+  const body = children.map((line) => `  ${wrapSlot(line)}`).join("\n");
   return [
     `<div data-slot="${meta.name}" id="${meta.name}">`,
     body,
