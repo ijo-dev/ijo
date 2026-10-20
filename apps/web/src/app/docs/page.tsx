@@ -11,14 +11,11 @@ export default function DocsIndex() {
     <>
       <h1 className="text-h1 font-semibold text-text">Docs</h1>
       <p>
-        Ijó components are copied into your project, not installed as a dependency you cannot
-        edit. Start with <Link href="/docs/getting-started">getting started</Link>, then read{" "}
+        Ijó components are copied into your project, not installed as a dependency you cannot edit.
+        Start with <Link href="/docs/getting-started">getting started</Link>, then read{" "}
         <Link href="/docs/reduced-motion">reduced motion</Link> before you ship.
       </p>
-      <p>
-        More pages — GSAP basics, easing, ScrollTrigger and performance — land with the first
-        twelve components.
-      </p>
+      <p>More pages — GSAP basics, easing, ScrollTrigger and performance — are on the way.</p>
     </>
   );
 }
