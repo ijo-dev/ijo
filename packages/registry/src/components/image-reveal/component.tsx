@@ -27,8 +27,12 @@ export type ImageRevealProps = {
   ease?: string;
   /** Where the top of the image must reach in the viewport before it reveals. */
   start?: string;
-  /** The element that scrolls, if it isn't the page. */
-  scroller?: React.RefObject<HTMLElement | null>;
+  /**
+   * The element that scrolls, if it isn't the page. Pass the element itself (from a
+   * callback ref or useState). While it is `null` nothing is set up; leave it out to
+   * use the page.
+   */
+  scroller?: HTMLElement | null;
   className?: string;
 };
 
@@ -53,6 +57,8 @@ export function ImageReveal({
 
   useGSAP(
     () => {
+      // A scroller was asked for but isn't mounted yet: wait for it.
+      if (scroller === null) return;
       const frame = scope.current;
       const inner = media.current;
       if (!frame || !inner) return;
@@ -66,7 +72,7 @@ export function ImageReveal({
           const reduced = context.conditions?.reduced ?? false;
           const scrollTrigger = {
             trigger: frame,
-            scroller: scroller?.current ?? undefined,
+            scroller: scroller ?? undefined,
             start,
             once: true,
           };

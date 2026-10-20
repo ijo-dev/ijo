@@ -8,6 +8,13 @@ test.describe("pinned-scroll", () => {
     const preview = page.getByTestId("preview-stage");
     await expect(preview).toBeVisible();
     await expect(preview.locator("[data-slot='pinned-scroll-item']").first()).toBeVisible();
+
+    // Scrolling the demo's own box down must slide the row sideways.
+    const track = preview.locator("[data-slot='pinned-scroll-track']");
+    await preview.locator(".overflow-y-auto").evaluate((box) => box.scrollTo(0, 400));
+    await expect
+      .poll(() => track.evaluate((el) => new DOMMatrix(getComputedStyle(el).transform).m41))
+      .toBeLessThan(-50);
   });
 
   test("moving a control updates the generated snippet", async ({ page }) => {

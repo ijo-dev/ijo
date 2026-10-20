@@ -18,7 +18,7 @@ The mask is a `clip-path` inset rather than a transform, because the frame has t
 its size in the layout while only its visible area grows; the zoom is a transform. It
 plays once and then leaves the image as authored. The frame clips its contents, so
 give the child a width and height (for example `width: 100%` and `object-fit: cover`).
-Pass `scroller` when the image lives inside its own scrolling box.
+Pass `scroller` when the image lives inside its own scrolling box. Pass the element itself, for example from a callback ref kept in state; while it is `null` nothing is set up.
 
 Under `prefers-reduced-motion: reduce` there is no mask or zoom; the image fades in
 over 0.3s.
@@ -32,7 +32,7 @@ over 0.3s.
 | `zoom`      | `number`                              | `1.25`         | 1.2 adds depth; 1 turns the zoom off.                                |
 | `ease`      | `string`                              | `"expo.inOut"` | `expo.inOut` is a curtain pulled; `power3.out` opens fast and slows. |
 | `start`     | `string`                              | `"top 85%"`    | How far into the viewport the image's top must reach first.          |
-| `scroller`  | `RefObject<HTMLElement>`              | the page       | The box that scrolls, when the image isn't on the page itself.       |
+| `scroller`  | `HTMLElement \| null`                 | the page       | The box that scrolls, when the image isn't on the page itself.       |
 
 ## Install
 

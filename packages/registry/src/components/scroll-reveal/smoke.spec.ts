@@ -8,8 +8,13 @@ test.describe("scroll-reveal", () => {
     const preview = page.getByTestId("preview-stage");
     await expect(preview).toBeVisible();
     // The first roast is already inside the list's viewport, so it reveals straight away.
-    const first = preview.locator("[data-slot='scroll-reveal-item']").first();
-    await expect(first).toHaveCSS("opacity", "1");
+    const items = preview.locator("[data-slot='scroll-reveal-item']");
+    await expect(items.first()).toHaveCSS("opacity", "1");
+
+    // The last roast is below the box's fold: hidden until the box scrolls to it.
+    await expect(items.last()).toHaveCSS("opacity", "0");
+    await preview.locator(".overflow-y-auto").evaluate((box) => box.scrollTo(0, box.scrollHeight));
+    await expect(items.last()).toHaveCSS("opacity", "1");
   });
 
   test("moving a control updates the generated snippet", async ({ page }) => {

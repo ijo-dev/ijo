@@ -16,21 +16,21 @@ Items that cross the line together, such as a row of cards, are batched into one
 reveal staggered by `stagger`, so a fast scroll down a long list never queues a slow
 parade. With `once` off, items hide again when you scroll back above them and replay
 on the way down. Pass `scroller` when the list lives inside its own scrolling box
-rather than the page. Every trigger is killed on unmount or when a prop changes.
+rather than the page. Pass the element itself, for example from a callback ref kept in state; while it is `null` nothing is set up. Every trigger is killed on unmount or when a prop changes.
 
 Under `prefers-reduced-motion: reduce` nothing is hidden or moved.
 
 ## Props
 
-| Prop       | Type                     | Default        | When you'd use it                                                          |
-| ---------- | ------------------------ | -------------- | -------------------------------------------------------------------------- |
-| `duration` | `number`                 | `0.7`          | Keep under a second for lists, so readers aren't waiting to scroll on.     |
-| `distance` | `number`                 | `32`           | 24–40px reads as settling; more feels like flying in.                      |
-| `stagger`  | `number`                 | `0.08`         | The gap between items arriving together. Only applies within a batch.      |
-| `ease`     | `string`                 | `"power3.out"` | `expo.out` lands faster for text; `back.out` overshoots for playful cards. |
-| `start`    | `string`                 | `"top 85%"`    | How far in an item's top must reach. Lower on screen appears sooner.       |
-| `once`     | `boolean`                | `true`         | Off replays items each time you scroll down past them.                     |
-| `scroller` | `RefObject<HTMLElement>` | the page       | The box that scrolls, when the list isn't on the page itself.              |
+| Prop       | Type                  | Default        | When you'd use it                                                          |
+| ---------- | --------------------- | -------------- | -------------------------------------------------------------------------- |
+| `duration` | `number`              | `0.7`          | Keep under a second for lists, so readers aren't waiting to scroll on.     |
+| `distance` | `number`              | `32`           | 24–40px reads as settling; more feels like flying in.                      |
+| `stagger`  | `number`              | `0.08`         | The gap between items arriving together. Only applies within a batch.      |
+| `ease`     | `string`              | `"power3.out"` | `expo.out` lands faster for text; `back.out` overshoots for playful cards. |
+| `start`    | `string`              | `"top 85%"`    | How far in an item's top must reach. Lower on screen appears sooner.       |
+| `once`     | `boolean`             | `true`         | Off replays items each time you scroll down past them.                     |
+| `scroller` | `HTMLElement \| null` | the page       | The box that scrolls, when the list isn't on the page itself.              |
 
 ## Install
 

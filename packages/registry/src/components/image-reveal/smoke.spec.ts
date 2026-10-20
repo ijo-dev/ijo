@@ -7,6 +7,12 @@ test.describe("image-reveal", () => {
 
     const preview = page.getByTestId("preview-stage");
     await expect(preview).toBeVisible();
+    const frame = preview.locator("[data-slot='image-reveal']");
+    // Below the box's fold the frame is still masked...
+    await expect(frame).not.toHaveCSS("clip-path", /inset\(0%|none/);
+    // ...and scrolling it into view opens the mask fully.
+    await preview.locator(".overflow-y-auto").evaluate((box) => box.scrollTo(0, box.scrollHeight));
+    await expect(frame).toHaveCSS("clip-path", /inset\(0(%|px)?( 0(%|px)?)*\)|none/);
     await expect(preview.getByRole("img", { name: /bag of Ìjẹ̀bú dark roast/ })).toBeVisible();
   });
 

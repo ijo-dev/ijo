@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useState } from "react";
 import { ScrollReveal, ScrollRevealItem, type ScrollRevealProps } from "./component";
 
 const ROASTS = [
@@ -16,11 +16,15 @@ const ROASTS = [
 
 /** Bọ̀ Coffee's roast list, scrolling in its own box so the demo fits the stage. */
 export function ScrollRevealDemo(props: Omit<ScrollRevealProps, "children" | "scroller">) {
-  const box = useRef<HTMLDivElement>(null);
+  // A callback ref into state: the trigger is built once the scrolling box exists.
+  const [box, setBox] = useState<HTMLDivElement | null>(null);
   return (
     <div className="flex w-full max-w-[420px] flex-col gap-2">
       <p className="text-[12px] text-[var(--text-faint)]">Scroll the list</p>
-      <div ref={box} className="h-[260px] overflow-y-auto rounded-[14px] bg-[var(--surface-1)] p-3">
+      <div
+        ref={setBox}
+        className="h-[260px] overflow-y-auto rounded-[14px] bg-[var(--surface-1)] p-3"
+      >
         <ScrollReveal {...props} scroller={box} className="flex flex-col gap-2">
           {ROASTS.map((roast) => (
             <ScrollRevealItem

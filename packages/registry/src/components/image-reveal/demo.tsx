@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useState } from "react";
 import { ImageReveal, type ImageRevealProps } from "./component";
 
 /**
@@ -40,12 +40,16 @@ function CoffeeBag() {
 }
 
 export function ImageRevealDemo(props: Omit<ImageRevealProps, "children" | "scroller">) {
-  const box = useRef<HTMLDivElement>(null);
+  // A callback ref into state: the trigger is built once the scrolling box exists.
+  const [box, setBox] = useState<HTMLDivElement | null>(null);
   return (
     <div className="flex w-full max-w-[440px] flex-col gap-2">
       <p className="text-[12px] text-[var(--text-faint)]">Scroll down inside the box</p>
-      <div ref={box} className="h-[300px] overflow-y-auto rounded-[14px] bg-[var(--surface-1)] p-4">
-        <div className="flex h-[240px] flex-col justify-end gap-1 pb-4">
+      <div
+        ref={setBox}
+        className="h-[300px] overflow-y-auto rounded-[14px] bg-[var(--surface-1)] p-4"
+      >
+        <div className="flex h-[300px] flex-col justify-end gap-1 pb-4">
           <h3 className="text-[20px] font-semibold text-[var(--text)]">Visit the roastery</h3>
           <p className="text-[14px] text-[var(--text-muted)]">
             Herbert Macaulay Way, Yaba. Tastings every Saturday at 11.

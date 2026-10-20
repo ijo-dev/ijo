@@ -16,8 +16,12 @@ export type PinnedScrollProps = {
   length?: number;
   /** Settle on the nearest panel when scrolling stops. */
   snap?: boolean;
-  /** The element that scrolls, if it isn't the page. */
-  scroller?: React.RefObject<HTMLElement | null>;
+  /**
+   * The element that scrolls, if it isn't the page. Pass the element itself (from a
+   * callback ref or useState). While it is `null` nothing is set up; leave it out to
+   * use the page.
+   */
+  scroller?: HTMLElement | null;
   className?: string;
 };
 
@@ -40,6 +44,8 @@ export function PinnedScroll({
 
   useGSAP(
     () => {
+      // A scroller was asked for but isn't mounted yet: wait for it.
+      if (scroller === null) return;
       const section = scope.current;
       const row = track.current;
       if (!section || !row) return;
@@ -55,7 +61,7 @@ export function PinnedScroll({
             ease: "none",
             scrollTrigger: {
               trigger: section,
-              scroller: scroller?.current ?? undefined,
+              scroller: scroller ?? undefined,
               pin: true,
               start: "top top",
               end: () => `+=${travel() * length}`,
