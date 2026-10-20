@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { JetBrains_Mono, Schibsted_Grotesk } from "next/font/google";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
@@ -27,6 +27,9 @@ export const metadata: Metadata = {
   description: SITE.description,
   openGraph: { title: SITE.name, description: SITE.description, type: "website" },
 };
+
+/* Phones tint their browser bar to match the canvas, so the page has no light seam. */
+export const viewport: Viewport = { themeColor: "#17161b", colorScheme: "dark" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

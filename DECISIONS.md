@@ -141,3 +141,11 @@ animates `transform` and `opacity` only.
 This session's network blocks the npm registry, so nothing can be installed or built
 locally. Work goes to a branch, a pull request runs the full CI (build, lint, typecheck,
 Playwright on desktop and a Pixel 5), and only a green run is merged to `main`.
+
+## 2026-10-20 — The site is set in JetBrains Mono; demos keep Schibsted Grotesk
+
+Asked for after studying ThreeUI, whose chrome is all monospace. Mono gives the site a
+firmer, more technical frame. The demos show a fictional brand, so inside the preview
+stage the type switches back to Schibsted Grotesk and they still read as real products.
+Ligatures are off in interface text. Search moved to a ⌘K window with still previews,
+loaded only on first open so no page pays for it up front.
