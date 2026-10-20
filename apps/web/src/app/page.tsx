@@ -16,7 +16,10 @@ export default function HomePage() {
   return (
     <div className="mx-auto max-w-[1200px] px-4 md:px-8">
       <section className="py-16 md:py-24">
-        <h1 className="max-w-[16ch] text-display font-semibold md:text-display-xl">
+        <p className="mb-5 text-caption uppercase text-text-faint">
+          Free · MIT licensed · React, Vue and HTML
+        </p>
+        <h1 className="max-w-[18ch] text-[32px] leading-[38px] font-semibold tracking-[-0.03em] sm:text-display md:text-display-xl">
           Motion for every site, free
         </h1>
         <p className="mt-5 max-w-[60ch] text-body-lg text-text-muted">{SITE.description}</p>

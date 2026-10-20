@@ -42,15 +42,27 @@ export default async function ComponentPage({ params }: Params) {
 
   return (
     <article className="flex flex-col gap-10">
-      <header className="flex flex-col gap-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <h1 className="text-h1 font-semibold">{meta.title}</h1>
-          <Badge tone="brand">{meta.category}</Badge>
+      <header className="flex flex-col gap-4">
+        <h1 className="text-h1 font-semibold">{meta.title}</h1>
+        <p className="max-w-[72ch] text-small text-text-muted">
+          <span className="text-text">{meta.category}</span>
+          <span aria-hidden className="px-2 text-text-faint">
+            •
+          </span>
+          {meta.description}
+        </p>
+        <ul aria-label="Tags" className="flex flex-wrap gap-1.5">
+          {meta.tags.map((tag) => (
+            <li key={tag}>
+              <Badge>{tag}</Badge>
+            </li>
+          ))}
           {meta.sizeGzip ? (
-            <Badge>{(meta.sizeGzip / 1024).toFixed(1)} KB gzipped</Badge>
+            <li>
+              <Badge tone="brand">{(meta.sizeGzip / 1024).toFixed(1)} KB gzipped</Badge>
+            </li>
           ) : null}
-        </div>
-        <p className="max-w-[60ch] text-body-lg text-text-muted">{meta.description}</p>
+        </ul>
       </header>
 
       <Workbench meta={meta} controls={controls} siteUrl={SITE.url} />

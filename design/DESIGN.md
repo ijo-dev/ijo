@@ -28,8 +28,10 @@ Ijó (Yoruba for "dance") is a free, open motion-component library for builders 
 
 ## Type
 
-- One family does everything: Schibsted Grotesk (Google Fonts, weights 400/500/600). JetBrains Mono (400/500) for code and live values.
-- Hero: `display-xl` (drop to `display` under 640px). Sections: `h1`. Cards: `h3`. Copy: `body-lg` for leads, `body` for prose, `small` for UI.
+- The site is set entirely in JetBrains Mono (Google Fonts, 400/500/600): headings, navigation, body, code. Ligatures are off in interface text so `->` reads as two characters.
+- Demos keep Schibsted Grotesk (400/500/600). They show a fictional brand, so inside a preview stage (`demo-frame`) the type switches back to sans and the demo reads as a real product inside the mono frame.
+- Search is a recessed field (`inset-field`) with a keyboard hint (`kbd`): ⌘K, Ctrl+K or `/` open it from anywhere.
+- Hero: `display-xl` (drop to `display` under 768px, and to 32px on phones). Sections: `h1`. Cards: `h3`. Copy: `body-lg` for leads, `body` for prose, `small` for UI.
 - `caption` is the only style that may be uppercase. `numeric` uses tabular figures (`font-variant-numeric: tabular-nums`) so slider values don't jitter.
 - Line length: 60ch for leads, 70ch for prose.
 

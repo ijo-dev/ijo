@@ -14,7 +14,7 @@ export function LibraryBrowser({ items }: { items: Meta[] }) {
   // Only offer a filter for a category that has something in it.
   const available = useMemo(
     () => CATEGORIES.filter((name) => items.some((meta) => meta.category === name)),
-    [items]
+    [items],
   );
 
   const results = useMemo(() => {
@@ -43,9 +43,9 @@ export function LibraryBrowser({ items }: { items: Meta[] }) {
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search components"
-            aria-label="Search components"
-            className="h-9 w-[240px] rounded-md border border-border bg-surface-3 pl-9 pr-3 text-small text-text placeholder:text-text-faint hover:border-border-strong"
+            placeholder="Filter components"
+            aria-label="Filter components"
+            className="inset-field h-9 w-[260px] pl-9 pr-3 text-small text-text outline-offset-2 placeholder:text-text-faint"
           />
         </div>
 
@@ -98,7 +98,7 @@ function FilterChip({
         "rounded-sm border px-2.5 py-1 text-caption transition-colors duration-[100ms]",
         active
           ? "border-grape-7 bg-grape-3 text-grape-11"
-          : "border-border-subtle bg-surface-2 text-text-muted hover:bg-surface-3 hover:text-text"
+          : "border-border-subtle bg-surface-2 text-text-muted hover:bg-surface-3 hover:text-text",
       )}
     >
       {children}
