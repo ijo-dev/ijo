@@ -125,7 +125,7 @@ export function SearchPalette({ onClose }: { onClose: () => void }) {
             id={`${id}-results`}
             role="listbox"
             aria-label="Components"
-            className="grid flex-1 grid-cols-1 gap-2 overflow-y-auto px-3 pb-3 sm:grid-cols-2 md:grid-cols-3"
+            className="grid flex-1 auto-rows-max grid-cols-1 content-start gap-2 overflow-y-auto px-3 pb-3 sm:grid-cols-2 md:grid-cols-3"
           >
             {results.map((meta, index) => {
               const Demo = demos[meta.name as keyof typeof demos];
