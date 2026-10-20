@@ -26,7 +26,7 @@ const props = withDefaults(
     start?: string;
     scroller?: HTMLElement | null;
   }>(),
-  { duration: 1.2, direction: "up", zoom: 1.25, ease: "expo.inOut", start: "top 85%", scroller: null }
+  { duration: 1.2, direction: "up", zoom: 1.25, ease: "expo.inOut", start: "top 85%" }
 );
 
 const frame = ref<HTMLElement | null>(null);
@@ -35,6 +35,8 @@ let ctx: gsap.Context | undefined;
 
 const setup = () => {
   ctx?.revert();
+  // A scroller was asked for but isn't mounted yet: wait for it.
+  if (props.scroller === null) return;
   const f = frame.value;
   const m = media.value;
   if (!f || !m) return;

@@ -12,7 +12,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const props = withDefaults(
   defineProps<{ scrub?: number; length?: number; snap?: boolean; scroller?: HTMLElement | null }>(),
-  { scrub: 0.6, length: 1, snap: false, scroller: null }
+  { scrub: 0.6, length: 1, snap: false }
 );
 
 const section = ref<HTMLElement | null>(null);
@@ -21,6 +21,8 @@ let ctx: gsap.Context | undefined;
 
 const setup = () => {
   ctx?.revert();
+  // A scroller was asked for but isn't mounted yet: wait for it.
+  if (props.scroller === null) return;
   const s = section.value;
   const row = track.value;
   if (!s || !row) return;

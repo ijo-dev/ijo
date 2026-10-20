@@ -106,3 +106,38 @@ build time, because they are plain Markdown read on GitHub, are each component's
 The cost of waiting is that any install command published in the meantime carries
 the Vercel host, so hold off on publicising the registry URL until the domain is
 settled.
+
+## 2026-10-20 — Phase 2: twelve components, set in one demo world
+
+Text Reveal, Word Roller, Scramble Text, Magnetic Button, Jiggly Button, Scroll Reveal
+Stagger, Pinned Horizontal Scroll, Image Reveal Mask, Marquee, Accordion, Card Stack and
+Drawer Menu. Every demo is Bọ̀ Coffee in Lagos, as the taste rules ask. The largest is
+Drawer Menu at about 2.2 KB gzipped, well inside the 3 KB budget.
+
+## 2026-10-20 — A component may take its children without an Item wrapper
+
+`Meta.item` names the wrapper the snippet builder puts around each child. It defaults to
+`${export}Item`; `null` means the children go straight inside, which is what a button,
+a single heading or a single image wants.
+
+## 2026-10-20 — Scroll components take the scrolling element, not a ref to it
+
+`scroller` on ScrollReveal, PinnedScroll and ImageReveal is `HTMLElement | null`. React
+attaches a parent's refs only after its children's layout effects have run, so a
+`RefObject` handed down from the parent is still empty when the child builds its
+ScrollTrigger, and the trigger silently falls back to the page. An element kept in state
+by a callback ref re-renders the child once it exists. `null` means "asked for, not
+mounted yet" and sets nothing up; leaving the prop out means the page.
+
+## 2026-10-20 — Height and clip-path are animated where the effect needs them
+
+Accordion animates `height`, because the content below has to move to make room.
+Image Reveal Mask animates `clip-path`, because the frame has to keep its size while
+only its visible area grows. Both are documented on their pages; every other component
+animates `transform` and `opacity` only.
+
+## 2026-10-20 — Pull requests until CI can run locally
+
+This session's network blocks the npm registry, so nothing can be installed or built
+locally. Work goes to a branch, a pull request runs the full CI (build, lint, typecheck,
+Playwright on desktop and a Pixel 5), and only a green run is merged to `main`.
