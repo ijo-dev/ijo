@@ -67,6 +67,12 @@ export type Meta = {
   behaviour: string;
   /** The children the generated snippet shows, so the code matches the demo. */
   demoChildren: string[];
+  /**
+   * The wrapper each child goes in, e.g. "RiseInItem". Defaults to
+   * `${export}Item`. `null` means the children go straight inside the
+   * component, as with a button whose child is its label.
+   */
+  item?: string | null;
   tags: string[];
   /** GSAP plugins the component registers, for the dependency list. */
   plugins: string[];
