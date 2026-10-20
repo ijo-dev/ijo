@@ -19,7 +19,7 @@ export default function HomePage() {
         <p className="mb-5 text-caption uppercase text-text-faint">
           Free · MIT licensed · React, Vue and HTML
         </p>
-        <h1 className="max-w-[18ch] text-[32px] leading-[38px] font-semibold tracking-[-0.03em] sm:text-display md:text-display-xl">
+        <h1 className="max-w-[18ch] text-[32px]/[38px] font-semibold tracking-[-0.03em] sm:text-display md:text-display-xl">
           Motion for every site, free
         </h1>
         <p className="mt-5 max-w-[60ch] text-body-lg text-text-muted">{SITE.description}</p>
