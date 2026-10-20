@@ -52,3 +52,21 @@ test("every page is reachable from the header", async ({ page }) => {
     await page.goto("/");
   }
 });
+
+test("no component page is wider than the screen", async ({ page }) => {
+  await page.goto("/library");
+  const slugs = await page
+    .locator("main a[href^='/library/']")
+    .evaluateAll((links) => [...new Set(links.map((a) => a.getAttribute("href")))]);
+  expect(slugs.length).toBeGreaterThan(1);
+
+  for (const href of ["/", "/library", ...slugs]) {
+    await page.goto(href!);
+    // Let lazily mounted demos appear before measuring.
+    await page.waitForTimeout(300);
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(overflow, `${href} scrolls sideways by ${overflow}px`).toBeLessThanOrEqual(0);
+  }
+});

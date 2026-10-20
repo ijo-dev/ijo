@@ -34,9 +34,9 @@ export function Workbench({
         FRAMEWORKS.map((framework) => [
           framework,
           buildSnippet(meta, controls, values, framework, meta.demoChildren),
-        ])
+        ]),
       ) as Record<Framework, string>,
-    [meta, controls, values]
+    [meta, controls, values],
   );
 
   const set = (key: string, value: number | string | boolean) => {
@@ -47,7 +47,7 @@ export function Workbench({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="grid gap-4 lg:grid-cols-[1fr_300px]">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
         <PreviewStage replayKey={replay} onReplay={() => setReplay((n) => n + 1)} minHeight={320}>
           {Demo ? <Demo {...(values as Record<string, never>)} /> : null}
         </PreviewStage>
