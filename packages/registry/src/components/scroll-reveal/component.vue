@@ -18,10 +18,10 @@ const props = withDefaults(
     ease?: string;
     start?: string;
     once?: boolean;
-    /** The element that scrolls, if it isn't the page. */
+    /** The element that scrolls; leave out for the page. While it is null nothing is set up. */
     scroller?: HTMLElement | null;
   }>(),
-  { duration: 0.7, distance: 32, stagger: 0.08, ease: "power3.out", start: "top 85%", once: true, scroller: null }
+  { duration: 0.7, distance: 32, stagger: 0.08, ease: "power3.out", start: "top 85%", once: true }
 );
 
 const scope = ref<HTMLElement | null>(null);
@@ -29,6 +29,8 @@ let ctx: gsap.Context | undefined;
 
 const setup = () => {
   ctx?.revert();
+  // A scroller was asked for but isn't mounted yet: wait for it.
+  if (props.scroller === null) return;
   const el = scope.value;
   if (!el) return;
   ctx = gsap.context(() => {
