@@ -112,11 +112,20 @@ export function DrawerMenu({
     if (!tl) return;
     if (open) {
       tl.timeScale(1).play();
-      // The drawer becomes visible on GSAP's next frame; focus it once it can take focus.
+      // The drawer becomes visible on GSAP's next frame; focus it once it can take focus,
+      // unless it has already been closed again by then.
       const frame = requestAnimationFrame(() =>
-        requestAnimationFrame(() => panel.current?.querySelector<HTMLElement>(FOCUSABLE)?.focus()),
+        requestAnimationFrame(() => {
+          if (isOpen.current) panel.current?.querySelector<HTMLElement>(FOCUSABLE)?.focus();
+        }),
       );
-      return () => cancelAnimationFrame(frame);
+      // Escape closes it from anywhere, even before focus has moved into the drawer.
+      const onEscape = (event: KeyboardEvent) => event.key === "Escape" && setOpen(false);
+      document.addEventListener("keydown", onEscape);
+      return () => {
+        cancelAnimationFrame(frame);
+        document.removeEventListener("keydown", onEscape);
+      };
     } else {
       // Close a little faster than it opened.
       tl.timeScale(1.6).reverse();
@@ -125,7 +134,6 @@ export function DrawerMenu({
   }, [open]);
 
   const onKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === "Escape") setOpen(false);
     if (event.key !== "Tab" || !panel.current) return;
     // Keep focus inside the open drawer.
     const stops = [...panel.current.querySelectorAll<HTMLElement>(FOCUSABLE)];

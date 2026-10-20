@@ -48,11 +48,18 @@
       reduced ? 0 : options.duration * 0.3
     );
 
+  let isOpen = false;
+  const onEscape = (event) => event.key === "Escape" && setOpen(false);
+
   const setOpen = (open) => {
+    isOpen = open;
     trigger.setAttribute("aria-expanded", String(open));
+    // Escape closes it from anywhere, even before focus has moved into the drawer.
+    if (open) document.addEventListener("keydown", onEscape);
+    else document.removeEventListener("keydown", onEscape);
     if (open) {
       tl.timeScale(1).play();
-      requestAnimationFrame(() => requestAnimationFrame(() => panel.querySelector(FOCUSABLE)?.focus()));
+      requestAnimationFrame(() => requestAnimationFrame(() => isOpen && panel.querySelector(FOCUSABLE)?.focus()));
     } else {
       tl.timeScale(1.6).reverse();
       if (panel.contains(document.activeElement)) trigger.focus();
@@ -63,7 +70,6 @@
   root.querySelector("[data-slot='drawer-menu-overlay']").addEventListener("click", () => setOpen(false));
   root.querySelector("[data-slot='drawer-menu-close']").addEventListener("click", () => setOpen(false));
   layer.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") setOpen(false);
     if (event.key !== "Tab") return;
     const stops = [...panel.querySelectorAll(FOCUSABLE)];
     const [first, last] = [stops[0], stops[stops.length - 1]];
