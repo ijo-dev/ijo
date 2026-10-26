@@ -96,6 +96,24 @@ function Highlight({ text, query }: { text: string; query: string }) {
   );
 }
 
+/** Components opened from search, newest first, kept in this browser only. */
+const RECENT_KEY = "ijo:recent-search";
+const readRecent = (): string[] => {
+  try {
+    const value = JSON.parse(localStorage.getItem(RECENT_KEY) ?? "[]");
+    return Array.isArray(value) ? value.filter((href) => typeof href === "string") : [];
+  } catch {
+    return [];
+  }
+};
+const writeRecent = (hrefs: string[]) => {
+  try {
+    localStorage.setItem(RECENT_KEY, JSON.stringify(hrefs.slice(0, 4)));
+  } catch {
+    // Private mode or blocked storage: recents are a convenience, so skip them.
+  }
+};
+
 /**
  * The search window behind ⌘K: a compact, grouped list, like the command menus in
  * Vercel, Supabase and ElevenLabs. No live previews here, so it opens instantly on
@@ -111,7 +129,17 @@ export function SearchPalette({ onClose }: { onClose: () => void }) {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("All");
   const [active, setActive] = useState(0);
-  const items = useMemo(() => search(query, filter), [query, filter]);
+  const [recent, setRecent] = useState<string[]>(readRecent);
+  const items = useMemo(() => {
+    const found = search(query, filter);
+    if (query.trim() || filter !== "All" || !recent.length) return found;
+    // Before you type, the components you opened last come first.
+    const again = recent
+      .map((href) => found.find((item) => item.href === href))
+      .filter((item): item is Item => item !== undefined)
+      .map((item) => ({ ...item, group: "Recent" }));
+    return [...again, ...found];
+  }, [query, filter, recent]);
   const current = Math.min(active, Math.max(items.length - 1, 0));
   const count = items.filter((item) => item.kind === "component").length;
 
@@ -126,13 +154,41 @@ export function SearchPalette({ onClose }: { onClose: () => void }) {
     };
   }, []);
 
+  // On a phone, the system Back button (or swipe) should close search, not leave the page.
+  const phone = useRef(false);
+  const closeRef = useRef(onClose);
+  useEffect(() => {
+    closeRef.current = onClose;
+  });
+  useEffect(() => {
+    phone.current = window.matchMedia("(max-width: 639px)").matches;
+    if (!phone.current) return;
+    window.history.pushState(null, "", window.location.href);
+    const onBack = () => {
+      phone.current = false;
+      closeRef.current();
+    };
+    window.addEventListener("popstate", onBack);
+    return () => window.removeEventListener("popstate", onBack);
+  }, []);
+  const close = () => {
+    if (phone.current) window.history.back();
+    else onClose();
+  };
+
   useEffect(() => {
     document.getElementById(`${id}-option-${current}`)?.scrollIntoView({ block: "nearest" });
   }, [id, current]);
 
   const go = (href: string) => {
+    if (href.startsWith("/library/"))
+      writeRecent([href, ...readRecent().filter((h) => h !== href)]);
+    const replaceEntry = phone.current;
+    phone.current = false;
     onClose();
-    router.push(href);
+    // On a phone, take the place of the search entry so Back returns to the page you were on.
+    if (replaceEntry) router.replace(href);
+    else router.push(href);
   };
 
   const pickFilter = (value: string) => {
@@ -144,7 +200,7 @@ export function SearchPalette({ onClose }: { onClose: () => void }) {
   const onKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Escape") {
       event.preventDefault();
-      onClose();
+      close();
     } else if (event.key === "ArrowDown") {
       event.preventDefault();
       setActive(items.length ? (current + 1) % items.length : 0);
@@ -168,42 +224,56 @@ export function SearchPalette({ onClose }: { onClose: () => void }) {
     <div className="fixed inset-0 z-[60]" onKeyDown={onKeyDown}>
       <div
         aria-hidden
-        onClick={onClose}
+        onClick={close}
         className="absolute inset-0 bg-[rgb(0_0_0/0.55)] [animation:backdrop-in_140ms_ease-out]"
       />
       <div
         role="dialog"
         aria-modal="true"
         aria-label="Search components"
-        className="relative mx-auto mt-3 flex max-h-[min(560px,calc(100dvh-24px))] w-[calc(100%-24px)] max-w-[620px] flex-col overflow-hidden rounded-xl bg-surface-2 shadow-overlay [animation:palette-in_180ms_var(--ease-out)] sm:mt-[12vh]"
+        className="relative flex h-dvh w-full flex-col overflow-hidden bg-bg [animation:sheet-in_220ms_var(--ease-out)] sm:mx-auto sm:mt-[12vh] sm:h-auto sm:max-h-[min(560px,calc(100dvh-24px))] sm:max-w-[620px] sm:rounded-xl sm:bg-surface-2 sm:shadow-overlay sm:[animation:palette-in_180ms_var(--ease-out)]"
       >
-        {/* Search box */}
-        <div className="flex shrink-0 items-center gap-3 px-4">
-          <Search size={16} strokeWidth={1.75} aria-hidden className="shrink-0 text-text-faint" />
-          <input
-            ref={input}
-            role="combobox"
-            aria-label="Search components"
-            aria-expanded="true"
-            aria-controls={`${id}-results`}
-            aria-activedescendant={items.length ? `${id}-option-${current}` : undefined}
-            aria-autocomplete="list"
-            value={query}
-            onChange={(event) => {
-              setQuery(event.target.value);
-              setActive(0);
-            }}
-            placeholder="Search components and docs…"
-            spellCheck={false}
-            className="h-12 min-w-0 flex-1 bg-transparent text-[14px] text-text outline-none placeholder:text-text-faint"
-          />
+        {/* Search box. On a phone: a rounded field and a Cancel button, like native search. */}
+        <div className="flex shrink-0 items-center gap-3 px-3 pb-2 pt-[calc(env(safe-area-inset-top)+10px)] sm:px-4 sm:py-0">
+          <div className="flex h-11 min-w-0 flex-1 items-center gap-2.5 rounded-full bg-surface-2 px-3.5 shadow-ring-hairline sm:h-12 sm:gap-3 sm:rounded-none sm:bg-transparent sm:px-0 sm:shadow-none">
+            <Search size={16} strokeWidth={1.75} aria-hidden className="shrink-0 text-text-faint" />
+            <input
+              ref={input}
+              role="combobox"
+              aria-label="Search components"
+              aria-expanded="true"
+              aria-controls={`${id}-results`}
+              aria-activedescendant={items.length ? `${id}-option-${current}` : undefined}
+              aria-autocomplete="list"
+              value={query}
+              onChange={(event) => {
+                setQuery(event.target.value);
+                setActive(0);
+              }}
+              placeholder="Search components and docs…"
+              spellCheck={false}
+              autoCapitalize="none"
+              autoCorrect="off"
+              autoComplete="off"
+              enterKeyHint="go"
+              // 16px on phones: iOS Safari zooms the page into any smaller field.
+              className="h-full min-w-0 flex-1 bg-transparent text-[16px] text-text outline-none placeholder:text-text-faint sm:text-[14px]"
+            />
+          </div>
           <button
             type="button"
-            onClick={onClose}
-            className="kbd hover:text-text"
+            onClick={close}
+            className="kbd hidden hover:text-text sm:inline-flex"
             aria-label="Close search"
           >
             Esc
+          </button>
+          <button
+            type="button"
+            onClick={close}
+            className="h-11 shrink-0 px-1 text-[15px] text-primary-text sm:hidden"
+          >
+            Cancel
           </button>
         </div>
 
@@ -211,7 +281,7 @@ export function SearchPalette({ onClose }: { onClose: () => void }) {
         <div
           role="group"
           aria-label="Filter by category"
-          className="flex shrink-0 gap-1 overflow-x-auto overflow-y-hidden border-y border-border-subtle px-3 py-2 [scrollbar-width:none]"
+          className="flex shrink-0 gap-1.5 overflow-x-auto overflow-y-hidden border-b border-border-subtle px-3 pb-3 pt-1 [scrollbar-width:none] sm:gap-1 sm:border-t sm:py-2"
         >
           {FILTERS.map((value) => (
             <button
@@ -221,7 +291,7 @@ export function SearchPalette({ onClose }: { onClose: () => void }) {
               aria-pressed={filter === value}
               onClick={() => pickFilter(value)}
               className={clsx(
-                "h-7 shrink-0 rounded-sm px-2.5 text-[12px] transition-colors duration-[100ms]",
+                "h-8 shrink-0 rounded-full px-3.5 text-[13px] transition-colors duration-[100ms] sm:h-7 sm:rounded-sm sm:px-2.5 sm:text-[12px]",
                 filter === value
                   ? "bg-surface-4 text-text shadow-ring-hairline"
                   : "text-text-muted hover:bg-surface-3 hover:text-text",
@@ -265,7 +335,7 @@ export function SearchPalette({ onClose }: { onClose: () => void }) {
             id={`${id}-results`}
             role="listbox"
             aria-label="Results"
-            className="flex-1 overflow-y-auto overscroll-contain p-2"
+            className="flex-1 overflow-y-auto overscroll-contain p-2 pb-[calc(env(safe-area-inset-bottom)+16px)] sm:pb-2"
           >
             {items.map((item, index) => {
               const selected = index === current;
@@ -277,7 +347,7 @@ export function SearchPalette({ onClose }: { onClose: () => void }) {
                   : (ICONS[item.group] ?? Layers);
               const newGroup = index === 0 || items[index - 1]?.group !== item.group;
               return (
-                <Fragment key={item.href}>
+                <Fragment key={`${item.group}-${item.href}`}>
                   {newGroup ? (
                     <div
                       role="presentation"
@@ -287,6 +357,20 @@ export function SearchPalette({ onClose }: { onClose: () => void }) {
                       )}
                     >
                       {item.group}
+                      {item.group === "Recent" ? (
+                        <button
+                          type="button"
+                          tabIndex={-1}
+                          onClick={() => {
+                            writeRecent([]);
+                            setRecent([]);
+                            input.current?.focus();
+                          }}
+                          className="float-right normal-case tracking-normal text-text-faint hover:text-text"
+                        >
+                          Clear
+                        </button>
+                      ) : null}
                     </div>
                   ) : null}
                   <div
@@ -296,7 +380,7 @@ export function SearchPalette({ onClose }: { onClose: () => void }) {
                     onMouseMove={() => selected || setActive(index)}
                     onClick={() => go(item.href)}
                     className={clsx(
-                      "flex cursor-pointer items-center gap-3 rounded-md px-2 py-2",
+                      "flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2.5 sm:rounded-md sm:py-2",
                       selected && "bg-surface-4",
                     )}
                   >
@@ -310,7 +394,7 @@ export function SearchPalette({ onClose }: { onClose: () => void }) {
                       <Icon size={15} strokeWidth={1.75} />
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[13px] font-medium leading-5 text-text">
+                      <span className="block truncate text-[14px] font-medium leading-5 text-text sm:text-[13px]">
                         <Highlight text={item.title} query={query} />
                       </span>
                       <span className="block truncate text-[12px] leading-4 text-text-faint">
@@ -334,7 +418,7 @@ export function SearchPalette({ onClose }: { onClose: () => void }) {
         )}
 
         {/* Key hints */}
-        <div className="flex shrink-0 items-center gap-4 border-t border-border-subtle px-4 py-2 text-[11px] text-text-faint">
+        <div className="flex shrink-0 items-center gap-4 border-t border-border-subtle px-4 py-2 text-[11px] text-text-faint max-sm:sr-only">
           <span className="hidden items-center gap-1.5 sm:inline-flex">
             <span className="kbd">↑</span>
             <span className="kbd">↓</span>

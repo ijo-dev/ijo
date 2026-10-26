@@ -31,6 +31,8 @@ export const releases: Release[] = [
       "Phones get a floating dock at the bottom for Home, Library, Search, Docs and Changelog.",
       "Clicking outside search now closes it, and the page behind dims properly.",
       "Drag along this changelog's ruler to travel through time, on a phone or a laptop.",
+      "On a phone, search fills the screen like native search, with Cancel, your recent components, and Back to close it.",
+      "Text fields are 16px on phones, so iPhone Safari no longer zooms in when you tap them.",
     ],
   },
   {
