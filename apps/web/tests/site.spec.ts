@@ -93,6 +93,7 @@ test("search filters by category with Tab and suggests words when nothing matche
   await page.goto("/");
   await page.keyboard.press("ControlOrMeta+k");
   const dialog = page.getByRole("dialog", { name: "Search components" });
+  await expect(page.getByRole("combobox", { name: "Search components" })).toBeFocused();
 
   await page.keyboard.press("Tab");
   await expect(dialog.getByRole("button", { name: "Text", exact: true })).toHaveAttribute(
