@@ -2,7 +2,8 @@ import { demos, registry } from "@ijo/registry";
 import Link from "next/link";
 import { CommandBlock } from "@/components/site/code-block";
 import { PreviewStage } from "@/components/site/preview-stage";
-import { ButtonLink, SectionHeader } from "@/components/site/ui";
+import { PromptBox } from "@/components/site/prompt-box";
+import { SectionHeader } from "@/components/site/ui";
 import { registryUrl, SITE } from "@/lib/site";
 
 /**
@@ -15,23 +16,28 @@ export default function HomePage() {
 
   return (
     <div className="mx-auto max-w-[1200px] px-4 md:px-8">
-      <section className="py-16 md:py-24">
+      <section className="py-14 md:py-20">
         <p className="mb-5 text-caption uppercase text-text-faint">
           Free · MIT licensed · React, Vue and HTML
         </p>
         <h1 className="max-w-[18ch] text-[32px]/[38px] font-semibold tracking-[-0.03em] sm:text-display md:text-display-xl">
-          Motion for every site, free
+          What do you want to animate?
         </h1>
-        <p className="mt-5 max-w-[60ch] text-body-lg text-text-muted">{SITE.description}</p>
-        <div className="mt-6 flex flex-wrap items-center gap-3">
-          <ButtonLink href="/library" variant="primary">
+        <p className="mb-7 mt-5 max-w-[58ch] text-body-lg text-text-muted">
+          Describe it in your own words. Ijó finds the motion component and writes the prompt for
+          your AI agent. Every component is free, under 3 KB, and fast on mid-range phones.
+        </p>
+        <PromptBox siteUrl={SITE.url} />
+        <p className="mt-6 text-small text-text-faint">
+          Or{" "}
+          <Link href="/library" className="text-primary-text hover:underline">
             Browse components
-          </ButtonLink>
-          <ButtonLink href="/docs">Read the docs</ButtonLink>
-          <span className="text-small text-text-faint">
-            {registry.length} component{registry.length === 1 ? "" : "s"} · MIT licensed
-          </span>
-        </div>
+          </Link>{" "}
+          · {registry.length} in the library ·{" "}
+          <Link href="/docs" className="text-text-muted hover:text-text hover:underline">
+            Read the docs
+          </Link>
+        </p>
       </section>
 
       {registry.map((entry, index) => {
