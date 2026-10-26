@@ -250,7 +250,7 @@ export function SearchPalette({ onClose }: { onClose: () => void }) {
                 setQuery(event.target.value);
                 setActive(0);
               }}
-              placeholder="Search components and docs…"
+              placeholder="Search components…"
               spellCheck={false}
               autoCapitalize="none"
               autoCorrect="off"
