@@ -158,7 +158,9 @@ export function SearchPalette({ onClose }: { onClose: () => void }) {
       // Focus stays in the box; Tab steps through the category filters instead.
       event.preventDefault();
       const step = event.shiftKey ? -1 : 1;
-      pickFilter(FILTERS[(FILTERS.indexOf(filter) + step + FILTERS.length) % FILTERS.length]);
+      pickFilter(
+        FILTERS[(FILTERS.indexOf(filter) + step + FILTERS.length) % FILTERS.length] ?? "All",
+      );
     }
   };
 
@@ -273,7 +275,7 @@ export function SearchPalette({ onClose }: { onClose: () => void }) {
                     ? ArrowRight
                     : BookOpen
                   : (ICONS[item.group] ?? Layers);
-              const newGroup = index === 0 || items[index - 1].group !== item.group;
+              const newGroup = index === 0 || items[index - 1]?.group !== item.group;
               return (
                 <Fragment key={item.href}>
                   {newGroup ? (
