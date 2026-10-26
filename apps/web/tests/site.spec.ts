@@ -189,3 +189,28 @@ test("screenshot of the changelog", async ({ page }, info) => {
   await page.waitForTimeout(600);
   await page.screenshot({ path: `screenshots/${info.project.name}/changelog.png` });
 });
+
+test("dragging the changelog ruler travels through time", async ({ page }, info) => {
+  await page.goto("/changelog");
+  const ruler = page
+    .getByRole("slider", { name: "Travel through releases" })
+    .locator("visible=true");
+  const box = (await ruler.boundingBox())!;
+  const last = await ruler.getAttribute("aria-valuemax");
+  const vertical = box.height > box.width;
+
+  await page.mouse.move(box.x + 4, box.y + 4);
+  await page.mouse.down();
+  await page.mouse.move(
+    vertical ? box.x + 4 : box.x + box.width - 2,
+    vertical ? box.y + box.height - 2 : box.y + 4,
+    { steps: 12 },
+  );
+  await page.mouse.up();
+  await expect(ruler).toHaveAttribute("aria-valuenow", last!);
+  await page.screenshot({ path: `screenshots/${info.project.name}/changelog-scrubbed.png` });
+
+  await ruler.focus();
+  await page.keyboard.press("Home");
+  await expect(ruler).toHaveAttribute("aria-valuenow", "1");
+});

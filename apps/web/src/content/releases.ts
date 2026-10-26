@@ -30,6 +30,7 @@ export const releases: Release[] = [
       "Examples roll through the empty box one at a time, and Try this example fills one in.",
       "Phones get a floating dock at the bottom for Home, Library, Search, Docs and Changelog.",
       "Clicking outside search now closes it, and the page behind dims properly.",
+      "Drag along this changelog's ruler to travel through time, on a phone or a laptop.",
     ],
   },
   {
