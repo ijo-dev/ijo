@@ -49,6 +49,8 @@ export function TimeReel({ releases }: { releases: Release[] }) {
   const [active, setActive] = useState(0);
   const [seen, setSeen] = useState<ReadonlySet<number>>(() => new Set([0]));
   const previous = useRef(0);
+  const triggers = useRef<ScrollTrigger[]>([]);
+  const dragging = useRef(false);
 
   const newest = at(releases[0]?.date ?? "2026-01-01");
   const oldest = at(releases[releases.length - 1]?.date ?? "2026-01-01");
@@ -79,13 +81,15 @@ export function TimeReel({ releases }: { releases: Release[] }) {
       };
       place(0);
 
-      gsap.utils.toArray<HTMLElement>("[data-entry]", root).forEach((entry, index) => {
+      triggers.current = gsap.utils.toArray<HTMLElement>("[data-entry]", root).map((entry, index) =>
         ScrollTrigger.create({
           trigger: entry,
           start: "top 55%",
           end: "bottom 55%",
           onToggle: (self) => {
             if (!self.isActive) return;
+            // A small tick under the thumb as you drag past a release, on phones that can.
+            if (dragging.current) navigator.vibrate?.(8);
             setActive(index);
             setSeen((set) => (set.has(index) ? set : new Set(set).add(index)));
           },
@@ -94,8 +98,8 @@ export function TimeReel({ releases }: { releases: Release[] }) {
             const to = stops[index + 1] ?? from;
             place(from + (to - from) * self.progress);
           },
-        });
-      });
+        }),
+      );
     },
     { scope },
   );
@@ -125,12 +129,77 @@ export function TimeReel({ releases }: { releases: Release[] }) {
     });
   };
 
+  /** The page scroll position that puts the marker at fraction p of the ruler. */
+  const scrollFor = (p: number) => {
+    const list = triggers.current;
+    for (let i = 0; i < list.length - 1; i++) {
+      const from = stops[i] ?? 0;
+      const to = stops[i + 1] ?? from;
+      const trigger = list[i];
+      if (trigger && to > from && p <= to) {
+        const t = Math.max(0, (p - from) / (to - from));
+        return trigger.start + t * (trigger.end - trigger.start);
+      }
+    }
+    return list[list.length - 1]?.start ?? 0;
+  };
+
+  /**
+   * Drag along either ruler to travel through time: the page scrolls under your
+   * finger, so the marker, the date and the releases all follow.
+   */
+  const scrub = (axis: "x" | "y") => ({
+    onPointerDown: (event: React.PointerEvent<HTMLElement>) => {
+      dragging.current = true;
+      event.currentTarget.setPointerCapture(event.pointerId);
+      move(event, axis);
+    },
+    onPointerMove: (event: React.PointerEvent<HTMLElement>) => {
+      if (dragging.current) move(event, axis);
+    },
+    onPointerUp: () => {
+      dragging.current = false;
+    },
+    onPointerCancel: () => {
+      dragging.current = false;
+    },
+    onKeyDown: (event: React.KeyboardEvent) => {
+      const step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[event.key];
+      if (step === undefined && event.key !== "Home" && event.key !== "End") return;
+      event.preventDefault();
+      const target =
+        event.key === "Home"
+          ? 0
+          : event.key === "End"
+            ? releases.length - 1
+            : Math.min(releases.length - 1, Math.max(0, active + (step ?? 0)));
+      const trigger = triggers.current[target];
+      if (trigger) window.scrollTo({ top: trigger.start + 1, behavior: "instant" });
+    },
+  });
+  const move = (event: React.PointerEvent<HTMLElement>, axis: "x" | "y") => {
+    const box = event.currentTarget.getBoundingClientRect();
+    const offset = axis === "x" ? event.clientX - box.left : event.clientY - box.top;
+    const size = axis === "x" ? box.width : box.height;
+    const p = Math.min(1, Math.max(0, offset / size));
+    window.scrollTo({ top: scrollFor(p), behavior: "instant" });
+  };
+  const slider = {
+    role: "slider",
+    tabIndex: 0,
+    "aria-label": "Travel through releases",
+    "aria-valuemin": 1,
+    "aria-valuemax": releases.length,
+    "aria-valuenow": active + 1,
+    "aria-valuetext": `${short(now)}: ${releases[active]?.title ?? ""}`,
+  } as const;
+
   return (
     <div ref={scope} className="lg:grid lg:grid-cols-[200px_minmax(0,1fr)] lg:gap-14">
       {/* Desktop: the date and a vertical ruler, pinned. */}
-      <aside className="hidden lg:block" aria-hidden>
+      <aside className="hidden lg:block">
         <div className="sticky top-24">
-          <div className="overflow-hidden">
+          <div className="overflow-hidden" aria-hidden>
             <div data-date-now>
               <div className="text-[64px] font-semibold leading-none tracking-[-0.04em] tabular-nums text-text">
                 {String(day(now)).padStart(2, "0")}
@@ -141,7 +210,12 @@ export function TimeReel({ releases }: { releases: Release[] }) {
             </div>
           </div>
 
-          <div className="relative mt-10" style={{ height: RULER }}>
+          <div
+            {...slider}
+            {...scrub("y")}
+            className="relative mt-10 cursor-grab touch-none select-none rounded-sm active:cursor-grabbing"
+            style={{ height: RULER }}
+          >
             {ticks.map((f) => {
               const step = Math.round(f * span * STEPS);
               const kind = step % (STEPS * 7) === 0 ? "week" : step % STEPS === 0 ? "day" : "minor";
@@ -163,6 +237,7 @@ export function TimeReel({ releases }: { releases: Release[] }) {
                 key={iso}
                 type="button"
                 tabIndex={-1}
+                onPointerDown={(event) => event.stopPropagation()}
                 onClick={() => jump(iso)}
                 style={{ top: `${f * 100}%` }}
                 className="absolute left-[72px] -translate-y-1/2 text-[11px] tabular-nums text-text-faint transition-colors hover:text-text"
@@ -183,14 +258,16 @@ export function TimeReel({ releases }: { releases: Release[] }) {
       </aside>
 
       {/* Phones and tablets: a slim bar with the date and a sideways ruler. */}
-      <div
-        aria-hidden
-        className="sticky top-14 z-10 -mx-4 mb-8 flex items-center gap-4 border-b border-border-subtle bg-bg px-4 py-3 md:-mx-8 md:px-8 lg:hidden"
-      >
-        <div className="shrink-0 text-[12px] tabular-nums text-text">
+      <div className="sticky top-14 z-10 -mx-4 mb-8 flex items-center gap-4 border-b border-border-subtle bg-bg px-4 py-1.5 md:-mx-8 md:px-8 lg:hidden">
+        <div aria-hidden className="shrink-0 text-[12px] tabular-nums text-text">
           {short(now)} <span className="text-text-faint">· Wk {isoWeek(now)}</span>
         </div>
-        <div className="relative h-5 flex-1">
+        {/* The whole strip is the grab area: tall enough for a thumb, the ticks sit at its foot. */}
+        <div
+          {...slider}
+          {...scrub("x")}
+          className="relative h-11 flex-1 cursor-grab select-none rounded-sm [touch-action:pan-y]"
+        >
           {ticks.map((f) => {
             const major = Math.round(f * span * STEPS) % STEPS === 0;
             return (
@@ -200,7 +277,7 @@ export function TimeReel({ releases }: { releases: Release[] }) {
                 data-f={f}
                 style={{ left: `${f * 100}%` }}
                 className={clsx(
-                  "tick absolute bottom-0 w-px origin-bottom transition-[transform,background-color] duration-150 [transform:scaleY(calc(1+var(--boost,0)*1.4))]",
+                  "tick absolute bottom-3 w-px origin-bottom transition-[transform,background-color] duration-150 [transform:scaleY(calc(1+var(--boost,0)*1.4))]",
                   major ? "h-2.5" : "h-1.5",
                 )}
               />
@@ -208,8 +285,11 @@ export function TimeReel({ releases }: { releases: Release[] }) {
           })}
           <span
             data-playhead
-            className="absolute -bottom-1 top-[-6px] w-0.5 -translate-x-1/2 bg-grape-9 [left:calc(var(--p,0)*100%)]"
-          />
+            className="pointer-events-none absolute bottom-2 top-2 w-0.5 -translate-x-1/2 bg-grape-9 [left:calc(var(--p,0)*100%)]"
+          >
+            {/* A knob, so the marker reads as something you can grab. */}
+            <span className="absolute -top-1 left-1/2 size-3 -translate-x-1/2 rounded-full bg-grape-9 ring-2 ring-bg" />
+          </span>
         </div>
       </div>
 
