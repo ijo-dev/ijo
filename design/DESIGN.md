@@ -17,7 +17,7 @@ Ijó (Yoruba for "dance") is a free, open motion-component library for builders 
 
 ## Colour
 
-- Canvas is `bg`, a soft purple-charcoal rather than black. Step up for elevation: `surface-1` bands → `surface-2` cards → `surface-3` raised/inputs → `surface-4` overlays → `surface-5` pressed. Lighter means higher; do not use shadows for ordinary depth.
+- Canvas is `bg`, a near-black with a faint violet tint (never pure #000), so purple and the live demos carry the colour. Step up for elevation: `surface-1` bands → `surface-2` cards → `surface-3` raised/inputs → `surface-4` overlays → `surface-5` pressed. Lighter means higher; do not use shadows for ordinary depth.
 - Text: `text` for headings and body, `text-muted` for secondary copy, `text-faint` only for captions on `bg` through `surface-3`.
 - Purple: `primary` (grape-9) is the one solid call to action per view, with `on-primary` text. `primary-text` (grape-11) for links and purple icons. `grape-5` is the deep plum for large brand blocks (CTA band, hero stage) with `text` or `grape-12` on it. `grape-3`/`grape-7` for selected chips and filters.
 - Edges: cards, demo stages, code blocks and panels get `ring-hairline` (a 1px light ring), not a border. `border` (3:1) is only for form-field outlines; `border-subtle` for dividers.

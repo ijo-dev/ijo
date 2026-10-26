@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 };
 
 /* Phones tint their browser bar to match the canvas, so the page has no light seam. */
-export const viewport: Viewport = { themeColor: "#17161b", colorScheme: "dark" };
+export const viewport: Viewport = { themeColor: "#0b0a0e", colorScheme: "dark" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
