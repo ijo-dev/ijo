@@ -3,9 +3,9 @@
 import { defaultValues, demos, registry } from "@ijo/registry";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ArrowRight, ArrowUp } from "lucide-react";
+import { ArrowRight, ArrowUp, Shuffle } from "lucide-react";
 import Link from "next/link";
-import { useDeferredValue, useId, useMemo, useRef, useState } from "react";
+import { useDeferredValue, useEffect, useId, useMemo, useRef, useState } from "react";
 import { CopyButton } from "./copy-button";
 import { match, SUGGESTIONS } from "@/lib/match";
 import { buildPrompt, buildSnippet } from "@/lib/snippet";
@@ -63,6 +63,23 @@ export function PromptBox({ siteUrl }: { siteUrl: string }) {
     { scope, dependencies: [best?.meta.name ?? "", asked] },
   );
 
+  // Roll to the next example every few seconds while the box is empty.
+  const [example, setExample] = useState(0);
+  useEffect(() => {
+    if (request) return;
+    const timer = setInterval(() => setExample((n) => (n + 1) % SUGGESTIONS.length), 3200);
+    return () => clearInterval(timer);
+  }, [request]);
+  useGSAP(
+    () => {
+      if (example === 0) return;
+      gsap.matchMedia().add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.from("[data-example]", { yPercent: 100, opacity: 0, duration: 0.5, ease: "expo.out" });
+      });
+    },
+    { scope, dependencies: [example], revertOnUpdate: true },
+  );
+
   const Demo = best ? demos[best.meta.name as keyof typeof demos] : undefined;
 
   return (
@@ -70,54 +87,71 @@ export function PromptBox({ siteUrl }: { siteUrl: string }) {
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          document.getElementById(`${id}-answer`)?.focus();
+          if (request.trim()) document.getElementById(`${id}-answer`)?.focus();
         }}
-        className="flex items-end gap-2 rounded-xl bg-surface-1 p-2 pl-4 shadow-ring-hairline transition-shadow focus-within:shadow-[0_0_0_1px_var(--grape-8)]"
+        className="rounded-[22px] bg-surface-1 shadow-ring-hairline transition-shadow duration-150 focus-within:shadow-[0_0_0_1px_var(--grape-8)]"
       >
-        <label htmlFor={`${id}-input`} className="sr-only">
-          Describe the animation you want
-        </label>
-        <textarea
-          ref={input}
-          id={`${id}-input`}
-          rows={2}
-          value={request}
-          onChange={(event) => setRequest(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" && !event.shiftKey) {
-              event.preventDefault();
-              event.currentTarget.form?.requestSubmit();
-            }
-          }}
-          placeholder="Describe it in your own words, e.g. pricing cards that pile up"
-          className="demo-frame min-h-[52px] flex-1 resize-none bg-transparent py-2 text-[15px]/[22px] text-text outline-none placeholder:text-text-faint"
-        />
-        <button
-          type="submit"
-          aria-label="Find a component"
-          className="grid size-9 shrink-0 place-items-center rounded-md bg-primary text-on-primary transition-colors hover:bg-primary-hover"
-        >
-          <ArrowUp size={16} strokeWidth={2} aria-hidden />
-        </button>
-      </form>
-
-      {!asked ? (
-        <div className="mt-3 flex flex-wrap gap-2">
-          {SUGGESTIONS.map((suggestion) => (
-            <button
-              key={suggestion}
-              type="button"
-              onClick={() => {
-                setRequest(suggestion);
-                input.current?.focus();
-              }}
-              className="rounded-full bg-surface-1 px-3 py-1.5 text-[12px] text-text-muted shadow-ring-hairline transition-colors hover:bg-surface-2 hover:text-text"
+        <div className="relative">
+          <label htmlFor={`${id}-input`} className="sr-only">
+            Describe the animation you want
+          </label>
+          <textarea
+            ref={input}
+            id={`${id}-input`}
+            rows={2}
+            value={request}
+            aria-describedby={`${id}-example`}
+            onChange={(event) => setRequest(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                event.currentTarget.form?.requestSubmit();
+              }
+            }}
+            className="block max-h-40 min-h-[60px] w-full resize-none bg-transparent px-5 pt-4 text-[14px]/[22px] text-text outline-none [field-sizing:content]"
+          />
+          {/* One example at a time, in place of a placeholder, rolling up every few seconds. */}
+          {!request ? (
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-5 top-4 h-[22px] overflow-hidden text-[14px]/[22px] text-text-faint"
             >
-              {suggestion}
-            </button>
-          ))}
+              <span data-example key={example} className="block truncate">
+                {SUGGESTIONS[example]}…
+              </span>
+            </div>
+          ) : null}
+          <span id={`${id}-example`} className="sr-only">
+            For example: {SUGGESTIONS[example]}
+          </span>
         </div>
-      ) : null}
+
+        <div className="flex items-center gap-2 px-2.5 pb-2.5 pt-1">
+          <button
+            type="button"
+            onClick={() => {
+              setRequest(SUGGESTIONS[example] ?? "");
+              setExample((n) => (n + 1) % SUGGESTIONS.length);
+              input.current?.focus();
+            }}
+            className="inline-flex h-8 items-center gap-1.5 rounded-full px-2.5 text-[12px] text-text-muted transition-colors duration-100 hover:bg-surface-3 hover:text-text"
+          >
+            <Shuffle size={14} strokeWidth={1.75} aria-hidden />
+            {request ? "Another example" : "Try this example"}
+          </button>
+          <span className="ml-auto hidden text-[11px] text-text-faint sm:inline">
+            Enter to find
+          </span>
+          <button
+            type="submit"
+            aria-label="Find a component"
+            disabled={!request.trim()}
+            className="grid size-8 shrink-0 place-items-center rounded-full bg-primary text-on-primary transition-colors duration-100 hover:bg-primary-hover disabled:bg-surface-4 disabled:text-text-faint max-sm:ml-auto"
+          >
+            <ArrowUp size={16} strokeWidth={2} aria-hidden />
+          </button>
+        </div>
+      </form>
 
       <div aria-live="polite">
         {asked && best ? (
