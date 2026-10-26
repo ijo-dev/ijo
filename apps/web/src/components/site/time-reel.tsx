@@ -51,6 +51,7 @@ export function TimeReel({ releases }: { releases: Release[] }) {
   const previous = useRef(0);
   const triggers = useRef<ScrollTrigger[]>([]);
   const dragging = useRef(false);
+  const lastP = useRef(0);
 
   const newest = at(releases[0]?.date ?? "2026-01-01");
   const oldest = at(releases[releases.length - 1]?.date ?? "2026-01-01");
@@ -158,6 +159,7 @@ export function TimeReel({ releases }: { releases: Release[] }) {
     const offset = vertical ? event.clientY - box.top : event.clientX - box.left;
     const size = vertical ? box.height : box.width;
     const p = Math.min(1, Math.max(0, offset / size));
+    lastP.current = p;
     window.scrollTo({ top: scrollFor(p), behavior: "instant" });
   };
 
@@ -173,8 +175,22 @@ export function TimeReel({ releases }: { releases: Release[] }) {
   const onPointerMove = (event: React.PointerEvent<HTMLElement>) => {
     if (dragging.current) move(event);
   };
+  // On letting go, settle on the nearest release so you never stop between two.
   const onPointerEnd = () => {
+    if (!dragging.current) return;
     dragging.current = false;
+    let nearest = 0;
+    stops.forEach((stop, i) => {
+      if (Math.abs(stop - lastP.current) < Math.abs((stops[nearest] ?? 0) - lastP.current))
+        nearest = i;
+    });
+    // Two releases on the same day share a tick; past it, take the later (older) one.
+    while (stops[nearest + 1] === stops[nearest] && lastP.current > (stops[nearest] ?? 0))
+      nearest++;
+    const trigger = triggers.current[nearest];
+    if (!trigger) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: trigger.start + 1, behavior: reduce ? "instant" : "smooth" });
   };
   const onKeyDown = (event: React.KeyboardEvent) => {
     const step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[event.key];

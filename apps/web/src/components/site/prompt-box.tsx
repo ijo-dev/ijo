@@ -204,8 +204,8 @@ export function PromptBox({ siteUrl }: { siteUrl: string }) {
                 </Link>
               </div>
               <p className="border-t border-border-subtle pt-3 text-[11px]/[16px] text-text-faint">
-                Matched in your browser from {items.length} components. No AI, nothing sent. Paste
-                the prompt into Claude Code, Cursor or any agent.
+                Copy the prompt, paste it into your AI coding tool (Claude Code, Cursor, Copilot)
+                and it adds the component to your project for you.
               </p>
             </div>
           </section>
