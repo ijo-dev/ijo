@@ -124,3 +124,17 @@ test("the search button opens search and Escape closes it", async ({ page }) => 
   await expect(dialog).toBeHidden();
   await expect(button).toBeFocused();
 });
+
+test("the changelog lists releases newest first and moves the ruler as you scroll", async ({
+  page,
+}) => {
+  await page.goto("/changelog");
+  const releases = page.locator("[data-entry]");
+  await expect(releases.first()).toContainText("A darker canvas");
+  const head = page.locator("[data-playhead]").first();
+  const before = await head.evaluate((el) => el.style.getPropertyValue("--p"));
+  await releases.last().scrollIntoViewIfNeeded();
+  await expect
+    .poll(() => head.evaluate((el) => Number(el.style.getPropertyValue("--p"))))
+    .toBeGreaterThan(Number(before) + 0.5);
+});

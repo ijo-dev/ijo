@@ -162,3 +162,13 @@ live previews inside, so it opens instantly on slow data.
 Asked for after studying Fey: the canvas was a grey-purple (#17161b) that dulled the
 purple. It is now near-black with a faint violet tint (#0b0a0e), and each surface steps
 up by a small amount. Contrast went up everywhere (text-faint now passes on surface-4).
+
+## 2026-10-26 — Library cards and a time-reel changelog
+
+Library: pill tabs with counts, cards that frame a dark preview window inside a
+slightly lighter card (after Fey), no tag chips, and the newest component as a
+larger featured card. "New" now shows only on that featured card; on every card it
+was noise. Changelog: releases live in `apps/web/src/content/releases.ts`, shown as
+a timeline beside a pinned ruler of days. A purple marker travels the ruler as you
+scroll back in time, nearby ticks swell and turn purple, and the big date rolls to
+the release in view (reference: forty.lesliewilliams.design, from the user).

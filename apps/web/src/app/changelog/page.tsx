@@ -1,35 +1,26 @@
-import { registry } from "@ijo/registry";
 import type { Metadata } from "next";
+import { TimeReel } from "@/components/site/time-reel";
+import { releases } from "@/content/releases";
 
 export const metadata: Metadata = {
   title: "Changelog",
-  description: "What shipped, and when.",
+  description: "Everything that shipped in Ijó, newest first.",
 };
 
 export default function ChangelogPage() {
-  const entries = [...registry].sort((a, b) => b.meta.added.localeCompare(a.meta.added));
-
   return (
-    <div className="mx-auto max-w-[720px] px-4 py-12 md:px-8">
-      <h1 className="text-h1 font-semibold">Changelog</h1>
-      <p className="mt-2 text-body text-text-muted">A new component every week.</p>
-
-      <ul className="mt-8 flex flex-col gap-4">
-        {entries.map((entry) => (
-          <li
-            key={entry.meta.name}
-            className="flex flex-col gap-1 rounded-lg bg-surface-2 p-4 shadow-ring-hairline"
-          >
-            <div className="flex items-baseline gap-3">
-              <time className="font-mono text-caption text-text-faint" dateTime={entry.meta.added}>
-                {entry.meta.added}
-              </time>
-              <span className="text-small font-semibold text-text">{entry.meta.title}</span>
-            </div>
-            <p className="text-small text-text-muted">{entry.meta.description}</p>
-          </li>
-        ))}
-      </ul>
+    <div className="mx-auto max-w-[1100px] px-4 pt-12 md:px-8 lg:pt-16">
+      <header className="mb-10 lg:mb-16 lg:ml-[256px]">
+        <p className="text-[12px] text-text-faint">Changelog</p>
+        <h1 className="mt-2 max-w-[20ch] text-[32px]/[38px] font-semibold tracking-[-0.03em] text-text md:text-[44px]/[48px]">
+          Scroll back through everything we shipped
+        </h1>
+        <p className="mt-4 max-w-[56ch] text-[14px]/[22px] text-text-muted">
+          A new component every week. The newest release is at the top; the ruler shows where you
+          are in time.
+        </p>
+      </header>
+      <TimeReel releases={releases} />
     </div>
   );
 }
