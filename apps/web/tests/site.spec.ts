@@ -102,6 +102,10 @@ test("search filters by category with Tab and suggests words when nothing matche
   );
   await expect(dialog.getByText("4 matching components")).toBeVisible();
 
+  // The filter row keeps its full height even when the list below is long.
+  const all = dialog.getByRole("button", { name: "All", exact: true });
+  expect((await all.boundingBox())?.height).toBeGreaterThanOrEqual(27);
+
   await page.keyboard.type("zzzz");
   await expect(dialog.getByText("No results for “zzzz”")).toBeVisible();
   await dialog.getByRole("button", { name: "scroll", exact: true }).click();

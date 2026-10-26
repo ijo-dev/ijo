@@ -178,7 +178,7 @@ export function SearchPalette({ onClose }: { onClose: () => void }) {
         className="relative mx-auto mt-3 flex max-h-[min(560px,calc(100dvh-24px))] w-[calc(100%-24px)] max-w-[620px] flex-col overflow-hidden rounded-xl bg-surface-2 shadow-overlay [animation:palette-in_180ms_var(--ease-out)] sm:mt-[12vh]"
       >
         {/* Search box */}
-        <div className="flex items-center gap-3 px-4">
+        <div className="flex shrink-0 items-center gap-3 px-4">
           <Search size={16} strokeWidth={1.75} aria-hidden className="shrink-0 text-text-faint" />
           <input
             ref={input}
@@ -211,7 +211,7 @@ export function SearchPalette({ onClose }: { onClose: () => void }) {
         <div
           role="group"
           aria-label="Filter by category"
-          className="flex gap-1 overflow-x-auto border-y border-border-subtle px-3 py-2 [scrollbar-width:none]"
+          className="flex shrink-0 gap-1 overflow-x-auto overflow-y-hidden border-y border-border-subtle px-3 py-2 [scrollbar-width:none]"
         >
           {FILTERS.map((value) => (
             <button
@@ -334,7 +334,7 @@ export function SearchPalette({ onClose }: { onClose: () => void }) {
         )}
 
         {/* Key hints */}
-        <div className="flex items-center gap-4 border-t border-border-subtle px-4 py-2 text-[11px] text-text-faint">
+        <div className="flex shrink-0 items-center gap-4 border-t border-border-subtle px-4 py-2 text-[11px] text-text-faint">
           <span className="hidden items-center gap-1.5 sm:inline-flex">
             <span className="kbd">↑</span>
             <span className="kbd">↓</span>
