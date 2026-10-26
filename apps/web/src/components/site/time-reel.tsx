@@ -144,6 +144,13 @@ export function TimeReel({ releases }: { releases: Release[] }) {
     return list[list.length - 1]?.start ?? 0;
   };
 
+  const move = (event: React.PointerEvent<HTMLElement>, axis: "x" | "y") => {
+    const box = event.currentTarget.getBoundingClientRect();
+    const offset = axis === "x" ? event.clientX - box.left : event.clientY - box.top;
+    const size = axis === "x" ? box.width : box.height;
+    const p = Math.min(1, Math.max(0, offset / size));
+    window.scrollTo({ top: scrollFor(p), behavior: "instant" });
+  };
   /**
    * Drag along either ruler to travel through time: the page scrolls under your
    * finger, so the marker, the date and the releases all follow.
@@ -177,13 +184,6 @@ export function TimeReel({ releases }: { releases: Release[] }) {
       if (trigger) window.scrollTo({ top: trigger.start + 1, behavior: "instant" });
     },
   });
-  const move = (event: React.PointerEvent<HTMLElement>, axis: "x" | "y") => {
-    const box = event.currentTarget.getBoundingClientRect();
-    const offset = axis === "x" ? event.clientX - box.left : event.clientY - box.top;
-    const size = axis === "x" ? box.width : box.height;
-    const p = Math.min(1, Math.max(0, offset / size));
-    window.scrollTo({ top: scrollFor(p), behavior: "instant" });
-  };
   const slider = {
     role: "slider",
     tabIndex: 0,
