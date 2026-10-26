@@ -9,6 +9,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: write
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -57,3 +60,17 @@ jobs:
           path: apps/web/screenshots
           if-no-files-found: ignore
           retention-days: 7
+
+      # Also keep them on a throwaway branch, readable through the GitHub API by
+      # tools that cannot download artifacts. Only for branches in this repo.
+      - name: Publish screenshots to a branch
+        if: ${{ !cancelled() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && hashFiles('apps/web/screenshots/**') != '' }}
+        env:
+          BRANCH: screenshots/${{ github.head_ref }}
+        run: |
+          cp -r apps/web/screenshots "$RUNNER_TEMP/shots"
+          cd "$RUNNER_TEMP/shots"
+          git init -q && git checkout -q -b "$BRANCH"
+          git add -A
+          git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -qm "Screenshots for ${{ github.sha }}"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" "$BRANCH"
