@@ -228,3 +228,15 @@
     opacity: 0;
   }
 }
+
+/*
+ * Changelog ruler ticks. --boost (0–1) is set from scroll: ticks near the marker
+ * take on the brand purple as they swell, like a wave passing under a needle.
+ */
+.tick {
+  background-color: color-mix(
+    in oklab,
+    var(--grape-10) calc(var(--boost, 0) * 100%),
+    color-mix(in oklab, var(--text-faint) 55%, transparent)
+  );
+}
