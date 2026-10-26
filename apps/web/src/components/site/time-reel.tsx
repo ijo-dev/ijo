@@ -141,7 +141,11 @@ export function TimeReel({ releases }: { releases: Release[] }) {
       const trigger = list[i];
       if (trigger && to > from && p <= to) {
         const t = Math.max(0, (p - from) / (to - from));
-        return trigger.start + t * (trigger.end - trigger.start);
+        // Travel from this release's start to the next one's, so the gap between
+        // them is never a dead zone under the finger.
+        const next = list[i + 1];
+        const end = next ? next.start + 1 : trigger.end;
+        return trigger.start + t * (end - trigger.start);
       }
     }
     return list[list.length - 1]?.start ?? 0;
