@@ -33,6 +33,14 @@ jobs:
 
       - run: pnpm lint
 
+      # Turn lint errors into annotations, so they show up next to the check.
+      - name: Annotate lint errors
+        if: failure()
+        working-directory: apps/web
+        run: |
+          pnpm exec eslint . -f json -o "$RUNNER_TEMP/eslint.json" || true
+          node -e 'for (const f of require(process.argv[1])) for (const m of f.messages) console.log(`::error file=${f.filePath.replace(process.cwd() + "/", "apps/web/")},line=${m.line}::${m.ruleId}: ${m.message}`)' "$RUNNER_TEMP/eslint.json"
+
       - run: pnpm typecheck
 
       # The generated files must match what is committed, or the code tabs and
