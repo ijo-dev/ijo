@@ -132,7 +132,7 @@ test("the changelog lists releases newest first and moves the ruler as you scrol
 }) => {
   await page.goto("/changelog");
   const releases = page.locator("[data-entry]");
-  await expect(releases.first()).toContainText("A darker canvas");
+  await expect(releases.first()).toContainText("What do you want to animate?");
   const head = page.locator("[data-playhead]").first();
   const before = await head.evaluate((el) => el.style.getPropertyValue("--p"));
   await releases.last().scrollIntoViewIfNeeded();
@@ -182,4 +182,10 @@ test("screenshots of the home prompt box", async ({ page }, info) => {
   await page.waitForTimeout(900);
   await page.screenshot({ path: `${dir}/home-answer.png`, fullPage: false });
   await page.getByRole("region", { name: /Best match/ }).screenshot({ path: `${dir}/answer.png` });
+});
+
+test("screenshot of the changelog", async ({ page }, info) => {
+  await page.goto("/changelog");
+  await page.waitForTimeout(600);
+  await page.screenshot({ path: `screenshots/${info.project.name}/changelog.png` });
 });
