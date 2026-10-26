@@ -48,3 +48,12 @@ jobs:
           name: playwright-report
           path: apps/web/playwright-report
           retention-days: 7
+
+      # Screenshots of key screens, so design changes can be checked without a local build.
+      - uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }}
+        with:
+          name: screenshots
+          path: apps/web/screenshots
+          if-no-files-found: ignore
+          retention-days: 7

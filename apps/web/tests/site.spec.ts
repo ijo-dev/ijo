@@ -172,3 +172,14 @@ test("on a phone the dock navigates and opens search", async ({ page, isMobile }
   await dock.getByRole("button", { name: "Search components" }).click();
   await expect(page.getByRole("dialog", { name: "Search components" })).toBeVisible();
 });
+
+test("screenshots of the home prompt box", async ({ page }, info) => {
+  const dir = `screenshots/${info.project.name}`;
+  await page.goto("/");
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: `${dir}/home-empty.png` });
+  await page.getByLabel("Describe the animation you want").fill("pricing cards that pile up");
+  await page.waitForTimeout(900);
+  await page.screenshot({ path: `${dir}/home-answer.png`, fullPage: false });
+  await page.getByRole("region", { name: /Best match/ }).screenshot({ path: `${dir}/answer.png` });
+});
