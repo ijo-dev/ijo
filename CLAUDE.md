@@ -60,7 +60,7 @@ We match the **product experience** (what a user can do), not Annnimate's code, 
 
 Use the **Ijó design system** (dark-only, purple-led): `design/tokens.json` (every token with its usage), `design/DESIGN.md` (the rules) and `design/reference-components.css` (reference styles for Button, Badge, Input, SectionHeader, ComponentCard, CodeBlock, ControlSlider). Load its tokens into Tailwind v4 `@theme` and CSS variables; do not invent colours or sizes.
 
-- Canvas `#17161b`, a soft purple-charcoal (not black); surfaces step up lighter for elevation (`surface-1` `#1c1b20` → `surface-5` `#33313a`); no shadows for ordinary depth.
+- Canvas `#0b0a0e`, a near-black with a faint violet tint (darker since Oct 2026, after Fey, so the purple stands out); surfaces step up lighter for elevation (`surface-1` `#100f13` → `surface-5` `#29272f`); no shadows for ordinary depth.
 - Edges are 1px light rings (`box-shadow: 0 0 0 1px rgba(255,255,255,.08)`), not borders. Form fields use the `#767482` control border (3:1).
 - Primary `#7a40da` (hover `#8755e6`) with white text, one primary CTA per view; purple text/links/focus ring `#c3aeff`; deep plum `#3d206f` for large brand blocks; warm accent `#ffa460`, max one per view. Callouts and diff lines use 14% tints of the signal colours.
 - Text `#f3f3f6` / muted `#bebcc5` / faint `#93909c`.

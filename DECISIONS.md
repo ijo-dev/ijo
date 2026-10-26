@@ -149,3 +149,16 @@ firmer, more technical frame. The demos show a fictional brand, so inside the pr
 stage the type switches back to Schibsted Grotesk and they still read as real products.
 Ligatures are off in interface text. Search moved to a ⌘K window with still previews,
 loaded only on first open so no page pays for it up front.
+
+## 2026-10-26 — Search is a compact grouped list
+
+Studied ElevenLabs, Vercel, Supabase and Mintlify on Mobbin. Real command menus are
+narrow lists, not preview grids. Search is now a 620px list grouped by category, with
+filter chips (Tab cycles them), highlighted matches, docs pages and an empty state. No
+live previews inside, so it opens instantly on slow data.
+
+## 2026-10-26 — Darker canvas
+
+Asked for after studying Fey: the canvas was a grey-purple (#17161b) that dulled the
+purple. It is now near-black with a faint violet tint (#0b0a0e), and each surface steps
+up by a small amount. Contrast went up everywhere (text-faint now passes on surface-4).
