@@ -172,3 +172,15 @@ was noise. Changelog: releases live in `apps/web/src/content/releases.ts`, shown
 a timeline beside a pinned ruler of days. A purple marker travels the ruler as you
 scroll back in time, nearby ticks swell and turn purple, and the big date rolls to
 the release in view (reference: forty.lesliewilliams.design, from the user).
+
+## 2026-10-26 — "What do you want to animate?" without AI, and a phone dock
+
+The home page opens with a prompt box, after Bolt, v0, Cursor and Replit. The user
+chose plain matching over a model for now: requests are scored in the browser against
+each component's name, tags, description and a list of everyday phrases
+(`apps/web/src/lib/match.ts`). It is free, instant on slow data, and sends nothing.
+The answer shows the live component, which words found it, and "Copy prompt" for the
+visitor's own agent, labelled with how it was produced (after Fey). Real AI can be
+added later behind the same box. Phones get a floating dock (after Fey) and the
+header links move to md and up. Search now renders into <body>, because the header's
+backdrop blur had trapped its fixed backdrop and stopped outside clicks closing it.

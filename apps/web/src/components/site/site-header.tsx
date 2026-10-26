@@ -25,7 +25,7 @@ export function SiteHeader() {
           {SITE.name}
         </Link>
 
-        <nav aria-label="Main" className="flex items-center">
+        <nav aria-label="Main" className="hidden items-center md:flex">
           {links.map((link) => (
             <Link
               key={link.href}
@@ -39,7 +39,7 @@ export function SiteHeader() {
 
         <div className="ml-auto flex items-center gap-2">
           <SearchTrigger />
-          {/* On a phone the nav links are the navigation; these wait for md. */}
+          {/* On a phone the dock at the bottom is the navigation; these wait for md. */}
           <span className="hidden md:contents">
             <ButtonLink
               href={SITE.repo}

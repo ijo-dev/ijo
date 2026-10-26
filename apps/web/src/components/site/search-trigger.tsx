@@ -3,6 +3,7 @@
 import { Search } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 
 /* The window and its previews load only when someone first opens search. */
 const SearchPalette = dynamic(() => import("./search-palette").then((m) => m.SearchPalette), {
@@ -35,8 +36,14 @@ export function SearchTrigger() {
         setOpen(true);
       }
     };
+    // The phone dock asks for search with an event rather than shared state.
+    const onOpen = () => setOpen(true);
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    window.addEventListener("ijo:open-search", onOpen);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("ijo:open-search", onOpen);
+    };
   }, []);
 
   return (
@@ -53,14 +60,22 @@ export function SearchTrigger() {
         <span className="hidden md:inline">Search components…</span>
         <span className="kbd ml-auto hidden md:inline-flex">{mac ? "⌘ K" : "Ctrl K"}</span>
       </button>
-      {open ? (
-        <SearchPalette
-          onClose={() => {
-            setOpen(false);
-            trigger.current?.focus();
-          }}
-        />
-      ) : null}
+      {/*
+        Rendered into <body>: the header's backdrop blur makes it the containing
+        block for fixed children, which would shrink the backdrop to the header and
+        stop a click outside the window from closing it.
+      */}
+      {open
+        ? createPortal(
+            <SearchPalette
+              onClose={() => {
+                setOpen(false);
+                trigger.current?.focus();
+              }}
+            />,
+            document.body,
+          )
+        : null}
     </>
   );
 }

@@ -2,7 +2,9 @@ import { expect, test } from "@playwright/test";
 
 test("home page leads with the hero and the library", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("Motion for every site");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(
+    "What do you want to animate?",
+  );
   await expect(page.getByRole("link", { name: "Browse components" }).first()).toBeVisible();
 });
 
@@ -44,7 +46,7 @@ test("the registry serves an item the shadcn CLI can read", async ({ request }) 
   expect(item.files[0].content).toContain("export function RiseIn");
 });
 
-test("every page is reachable from the header", async ({ page }) => {
+test("every page is reachable from the main navigation", async ({ page }) => {
   await page.goto("/");
   for (const name of ["Library", "Docs", "Changelog"]) {
     await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name }).click();
@@ -137,4 +139,36 @@ test("the changelog lists releases newest first and moves the ruler as you scrol
   await expect
     .poll(() => head.evaluate((el) => Number(el.style.getPropertyValue("--p"))))
     .toBeGreaterThan(Number(before) + 0.5);
+});
+
+test("the prompt box finds a component and offers a prompt", async ({ page }) => {
+  await page.goto("/");
+  await page.getByLabel("Describe the animation you want").fill("pricing cards that pile up");
+  const answer = page.getByRole("region", { name: "Best match: Card Stack" });
+  await expect(answer).toBeVisible();
+  await expect(answer.getByRole("button", { name: "Copy prompt" })).toBeVisible();
+
+  await page.getByLabel("Describe the animation you want").fill("zzzz");
+  await expect(page.getByText("Nothing in the library fits")).toBeVisible();
+});
+
+test("clicking outside search closes it", async ({ page }) => {
+  await page.goto("/changelog");
+  await page.keyboard.press("ControlOrMeta+k");
+  const dialog = page.getByRole("dialog", { name: "Search components" });
+  await expect(page.getByRole("combobox", { name: "Search components" })).toBeFocused();
+  const size = page.viewportSize()!;
+  await page.mouse.click(8, size.height - 8);
+  await expect(dialog).toBeHidden();
+});
+
+test("on a phone the dock navigates and opens search", async ({ page, isMobile }) => {
+  test.skip(!isMobile, "The dock is for phones");
+  await page.goto("/");
+  const dock = page.locator("nav", { has: page.getByRole("link", { name: "Changelog" }) }).last();
+  await dock.getByRole("link", { name: "Library" }).click();
+  await expect(page).toHaveURL(/\/library$/);
+  await expect(dock.getByRole("link", { name: "Library" })).toHaveAttribute("aria-current", "page");
+  await dock.getByRole("button", { name: "Search components" }).click();
+  await expect(page.getByRole("dialog", { name: "Search components" })).toBeVisible();
 });
