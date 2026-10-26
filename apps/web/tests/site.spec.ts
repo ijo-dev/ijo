@@ -117,7 +117,7 @@ test("search filters by category with Tab and suggests words when nothing matche
 
 test("the search button opens search and Escape closes it", async ({ page }) => {
   await page.goto("/library");
-  const button = page.getByRole("button", { name: "Search components" });
+  const button = page.getByRole("button", { name: "Search components" }).first();
   await button.click();
 
   const dialog = page.getByRole("dialog", { name: "Search components" });
