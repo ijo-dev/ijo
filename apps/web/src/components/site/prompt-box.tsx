@@ -164,7 +164,7 @@ export function PromptBox({ siteUrl }: { siteUrl: string }) {
           >
             <div
               inert
-              className="flex aspect-[16/10] items-center justify-center overflow-hidden rounded-lg bg-bg shadow-ring-hairline"
+              className="flex aspect-[16/10] items-center justify-center overflow-hidden rounded-lg bg-bg shadow-ring-hairline md:aspect-auto md:h-full md:min-h-[300px]"
             >
               <div className="demo-frame pointer-events-none w-full origin-center scale-[0.8]">
                 {Demo ? <Demo key={best.meta.name} /> : null}
