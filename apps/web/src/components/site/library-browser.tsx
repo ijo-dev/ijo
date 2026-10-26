@@ -91,7 +91,7 @@ export function LibraryBrowser({ items }: { items: Meta[] }) {
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Filter components"
             aria-label="Filter components"
-            className="inset-field h-9 w-full rounded-full pl-9 pr-3 text-[13px] text-text outline-offset-2 placeholder:text-text-faint"
+            className="inset-field h-9 w-full rounded-full pl-9 pr-3 text-[16px] sm:text-[13px] text-text outline-offset-2 placeholder:text-text-faint"
           />
         </div>
       </div>

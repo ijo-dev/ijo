@@ -152,7 +152,8 @@ test("the prompt box finds a component and offers a prompt", async ({ page }) =>
   await expect(page.getByText("Nothing in the library fits")).toBeVisible();
 });
 
-test("clicking outside search closes it", async ({ page }) => {
+test("clicking outside search closes it", async ({ page, isMobile }) => {
+  test.skip(isMobile, "On a phone, search fills the screen and closes with Cancel or Back");
   await page.goto("/changelog");
   await page.keyboard.press("ControlOrMeta+k");
   const dialog = page.getByRole("dialog", { name: "Search components" });
@@ -213,4 +214,42 @@ test("dragging the changelog ruler travels through time", async ({ page }, info)
   await ruler.focus();
   await page.keyboard.press("Home");
   await expect(ruler).toHaveAttribute("aria-valuenow", "1");
+});
+
+test("on a phone, search fills the screen and Cancel or Back closes it", async ({
+  page,
+  isMobile,
+}, info) => {
+  test.skip(!isMobile, "Phone layout");
+  await page.goto("/library");
+  const open = page.getByRole("button", { name: "Search components" }).last();
+  const dialog = page.getByRole("dialog", { name: "Search components" });
+  const box = page.getByRole("combobox", { name: "Search components" });
+
+  await open.click();
+  await expect(box).toBeFocused();
+  const size = (await dialog.boundingBox())!;
+  expect(size.width).toBeGreaterThanOrEqual(page.viewportSize()!.width - 1);
+  // 16px or more, so iOS Safari does not zoom the page.
+  expect(
+    await box.evaluate((el) => parseFloat(getComputedStyle(el).fontSize)),
+  ).toBeGreaterThanOrEqual(16);
+  await page.screenshot({ path: `screenshots/${info.project.name}/search.png` });
+
+  await page.getByRole("button", { name: "Cancel" }).click();
+  await expect(dialog).toBeHidden();
+  await expect(page).toHaveURL(/\/library$/);
+
+  await open.click();
+  await expect(box).toBeFocused();
+  await page.goBack();
+  await expect(dialog).toBeHidden();
+  await expect(page).toHaveURL(/\/library$/);
+
+  await open.click();
+  await box.fill("card");
+  await page.getByRole("option", { name: /Card Stack/ }).click();
+  await expect(page).toHaveURL(/\/library\/card-stack$/);
+  await page.goBack();
+  await expect(page).toHaveURL(/\/library$/);
 });

@@ -108,13 +108,13 @@ export function PromptBox({ siteUrl }: { siteUrl: string }) {
                 event.currentTarget.form?.requestSubmit();
               }
             }}
-            className="block max-h-40 min-h-[60px] w-full resize-none bg-transparent px-5 pt-4 text-[14px]/[22px] text-text outline-none [field-sizing:content]"
+            className="block max-h-40 min-h-[60px] w-full resize-none bg-transparent px-5 pt-4 text-[16px]/[24px] text-text outline-none [field-sizing:content] sm:text-[14px]/[22px]"
           />
           {/* One example at a time, in place of a placeholder, rolling up every few seconds. */}
           {!request ? (
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-x-5 top-4 h-[22px] overflow-hidden text-[14px]/[22px] text-text-faint"
+              className="pointer-events-none absolute inset-x-5 top-4 h-[24px] overflow-hidden text-[16px]/[24px] text-text-faint sm:h-[22px] sm:text-[14px]/[22px]"
             >
               <span data-example key={example} className="block truncate">
                 {SUGGESTIONS[example]}…

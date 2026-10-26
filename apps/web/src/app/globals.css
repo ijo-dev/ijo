@@ -240,3 +240,11 @@
     color-mix(in oklab, var(--text-faint) 55%, transparent)
   );
 }
+
+/* Search on a phone rises as a full screen, the way native search sheets do. */
+@keyframes sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}

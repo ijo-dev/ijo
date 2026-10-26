@@ -184,3 +184,15 @@ visitor's own agent, labelled with how it was produced (after Fey). Real AI can 
 added later behind the same box. Phones get a floating dock (after Fey) and the
 header links move to md and up. Search now renders into <body>, because the header's
 backdrop blur had trapped its fixed backdrop and stopped outside clicks closing it.
+
+## 2026-10-26 — Search on phones is a full screen, not a floating card
+
+Studied IKEA, Monzo, Klarna, LinkedIn, Substack and Apple's own apps on Mobbin: phone
+search takes the whole screen, with a rounded field and Cancel at the top, filters in
+one sideways-scrolling row, recents before you type, and large rows. Ours now does the
+same below 640px; laptops keep the ⌘K window. Opening search on a phone adds a history
+entry, so Android's Back button (or the iOS swipe) closes it instead of leaving the
+page, and choosing a result replaces that entry. Every text field is 16px on phones,
+because iOS Safari zooms the page into any smaller field. We kept the field at the top
+rather than above the keyboard: on the web, iOS Safari does not resize the page for
+the keyboard, so a bottom-pinned field jumps or hides behind it.
