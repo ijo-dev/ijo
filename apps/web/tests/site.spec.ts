@@ -87,6 +87,27 @@ test("⌘K opens search, filters the library and opens a result", async ({ page 
   await expect(dialog).toBeHidden();
 });
 
+test("search filters by category with Tab and suggests words when nothing matches", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.keyboard.press("ControlOrMeta+k");
+  const dialog = page.getByRole("dialog", { name: "Search components" });
+
+  await page.keyboard.press("Tab");
+  await expect(dialog.getByRole("button", { name: "Text", exact: true })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await expect(dialog.getByText("4 matching components")).toBeVisible();
+
+  await page.keyboard.type("zzzz");
+  await expect(dialog.getByText("No results for “zzzz”")).toBeVisible();
+  await dialog.getByRole("button", { name: "scroll", exact: true }).click();
+  await expect(dialog.getByText("3 matching components")).toBeVisible();
+  await expect(page.getByRole("combobox", { name: "Search components" })).toBeFocused();
+});
+
 test("the search button opens search and Escape closes it", async ({ page }) => {
   await page.goto("/library");
   const button = page.getByRole("button", { name: "Search components" });
