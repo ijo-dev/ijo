@@ -132,6 +132,9 @@ export function TimeReel({ releases }: { releases: Release[] }) {
   /** The page scroll position that puts the marker at fraction p of the ruler. */
   const scrollFor = (p: number) => {
     const list = triggers.current;
+    const lastIndex = list.length - 1;
+    // At the oldest end, land inside the last release rather than in the gap before it.
+    if (p >= (stops[lastIndex] ?? 1) - 0.0001) return (list[lastIndex]?.start ?? 0) + 1;
     for (let i = 0; i < list.length - 1; i++) {
       const from = stops[i] ?? 0;
       const to = stops[i + 1] ?? from;
