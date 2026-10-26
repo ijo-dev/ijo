@@ -144,46 +144,44 @@ export function TimeReel({ releases }: { releases: Release[] }) {
     return list[list.length - 1]?.start ?? 0;
   };
 
-  const move = (event: React.PointerEvent<HTMLElement>, axis: "x" | "y") => {
+  /** Which way a ruler runs comes from its data-axis, so one set of handlers serves both. */
+  const move = (event: React.PointerEvent<HTMLElement>) => {
+    const vertical = event.currentTarget.dataset.axis === "y";
     const box = event.currentTarget.getBoundingClientRect();
-    const offset = axis === "x" ? event.clientX - box.left : event.clientY - box.top;
-    const size = axis === "x" ? box.width : box.height;
+    const offset = vertical ? event.clientY - box.top : event.clientX - box.left;
+    const size = vertical ? box.height : box.width;
     const p = Math.min(1, Math.max(0, offset / size));
     window.scrollTo({ top: scrollFor(p), behavior: "instant" });
   };
-  /**
+
+  /*
    * Drag along either ruler to travel through time: the page scrolls under your
    * finger, so the marker, the date and the releases all follow.
    */
-  const scrub = (axis: "x" | "y") => ({
-    onPointerDown: (event: React.PointerEvent<HTMLElement>) => {
-      dragging.current = true;
-      event.currentTarget.setPointerCapture(event.pointerId);
-      move(event, axis);
-    },
-    onPointerMove: (event: React.PointerEvent<HTMLElement>) => {
-      if (dragging.current) move(event, axis);
-    },
-    onPointerUp: () => {
-      dragging.current = false;
-    },
-    onPointerCancel: () => {
-      dragging.current = false;
-    },
-    onKeyDown: (event: React.KeyboardEvent) => {
-      const step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[event.key];
-      if (step === undefined && event.key !== "Home" && event.key !== "End") return;
-      event.preventDefault();
-      const target =
-        event.key === "Home"
-          ? 0
-          : event.key === "End"
-            ? releases.length - 1
-            : Math.min(releases.length - 1, Math.max(0, active + (step ?? 0)));
-      const trigger = triggers.current[target];
-      if (trigger) window.scrollTo({ top: trigger.start + 1, behavior: "instant" });
-    },
-  });
+  const onPointerDown = (event: React.PointerEvent<HTMLElement>) => {
+    dragging.current = true;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    move(event);
+  };
+  const onPointerMove = (event: React.PointerEvent<HTMLElement>) => {
+    if (dragging.current) move(event);
+  };
+  const onPointerEnd = () => {
+    dragging.current = false;
+  };
+  const onKeyDown = (event: React.KeyboardEvent) => {
+    const step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[event.key];
+    if (step === undefined && event.key !== "Home" && event.key !== "End") return;
+    event.preventDefault();
+    const target =
+      event.key === "Home"
+        ? 0
+        : event.key === "End"
+          ? releases.length - 1
+          : Math.min(releases.length - 1, Math.max(0, active + (step ?? 0)));
+    const trigger = triggers.current[target];
+    if (trigger) window.scrollTo({ top: trigger.start + 1, behavior: "instant" });
+  };
   const slider = {
     role: "slider",
     tabIndex: 0,
@@ -212,7 +210,12 @@ export function TimeReel({ releases }: { releases: Release[] }) {
 
           <div
             {...slider}
-            {...scrub("y")}
+            data-axis="y"
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerEnd}
+            onPointerCancel={onPointerEnd}
+            onKeyDown={onKeyDown}
             className="relative mt-10 cursor-grab touch-none select-none rounded-sm active:cursor-grabbing"
             style={{ height: RULER }}
           >
@@ -265,7 +268,12 @@ export function TimeReel({ releases }: { releases: Release[] }) {
         {/* The whole strip is the grab area: tall enough for a thumb, the ticks sit at its foot. */}
         <div
           {...slider}
-          {...scrub("x")}
+          data-axis="x"
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerEnd}
+          onPointerCancel={onPointerEnd}
+          onKeyDown={onKeyDown}
           className="relative h-11 flex-1 cursor-grab select-none rounded-sm [touch-action:pan-y]"
         >
           {ticks.map((f) => {
