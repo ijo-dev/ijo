@@ -20,6 +20,20 @@ export type Release = {
 export const releases: Release[] = [
   {
     date: "2026-10-26",
+    title: "What do you want to animate?",
+    summary:
+      "The home page now opens with a prompt box. Describe the motion in your own words and Ijó finds the component, shows it live and writes the prompt for your AI agent.",
+    components: ["card-stack"],
+    changes: [
+      "Matching runs in your browser from each component's name, tags and everyday phrases. No AI, nothing sent, and it answers at once on slow data.",
+      "The answer shows which of your words found it, with Copy prompt for Claude Code, Cursor or any agent.",
+      "Examples roll through the empty box one at a time, and Try this example fills one in.",
+      "Phones get a floating dock at the bottom for Home, Library, Search, Docs and Changelog.",
+      "Clicking outside search now closes it, and the page behind dims properly.",
+    ],
+  },
+  {
+    date: "2026-10-26",
     title: "A darker canvas, a faster search",
     summary:
       "The site now sits on a near-black canvas, so the purple and the demos carry the colour. Search, the library and this changelog were redesigned.",
